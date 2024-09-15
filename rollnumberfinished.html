@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <link rel="stylesheet" href="belts.css">
+</head>
+<body>
+    <div id="johnSection" class="susan-container">
+        <h1>Enter Your Name</h1>
+        <input type="text" id="emmaField" class="michael-input" placeholder="Type your name here" />
+        <button class="lucas-button" onclick="checkName()">Submit</button>
+    </div>
+    <div id="aliceMessage" class="hidden">Welcome, <span id="jamesDisplay"></span>!</div>
+    <div id="hide" class="hide form-container">
+        <h2>Generate Images</h2>
+        <label for="menu1">Image Type:</label>
+        <select id="menu1" onchange="updateSelectedValue()">
+            <option value="" disabled selected>Select an option</option>
+            <option value="SSC Certificate">SSC Certificate</option>
+            <option value="Inter Certificate">Inter Certificate</option>
+            <option value="Aadhar">Aadhar</option>
+            <option value="Caste Certificate">Caste Certificate</option>
+            <option value="Income Certificate">Income Certificate</option>
+            <option value="Photo">Photo</option>
+        </select>
+        <p id="selectedMenuValue">No Selection</p>
+
+        <label for="startRoll">Start Roll:</label>
+        <input type="text" id="startRoll">
+
+        <label for="endRoll">End Roll:</label>
+        <input type="text" id="endRoll">
+
+        <button class="lucas-button" onclick="handleGenerateImages()">Generate Images</button>
+        <p id="imageCount">Total Images: 0</p>
+    </div>
+
+    <div id="imageGallery"></div>
+
+    <script src="aldjbcaubsjh.js"></script>
+</body>
+</html>
