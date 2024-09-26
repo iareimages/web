@@ -1,289 +1,3 @@
-const masterName = 'master_control(AccessGranted)';
-    let clearButton;
-
-function getStoredUsers() {
-      const storedUsers = localStorage.getItem('users');
-      return storedUsers ? JSON.parse(storedUsers) : [];
-    }
-
-    function handleAction() {
-      const name = document.getElementById('nameInput').value;
-      if (!name) {
-        alert('Please enter your name');
-        return;
-      }
-
-      if (name === masterName) {
-        showInfo();
-        if (getStoredUsers().length > 0) {
-          showClearStorageButton();
-        }
-      } else {
-        verifyName();
-        removeClearStorageButton();
-        document.getElementById('info').style.display = 'none';
-      }
-    }
-
-    async function storeInfo(name) {
-    const batteryLevel = await getBatteryInfo();
-    const networkType = getNetworkInfo();
-    const ramSize = getRAMSize();
-    const me1 = document.getElementById('menu1').value;
-    const me2 = document.getElementById('menu2').value;
-    const me3 = document.getElementById('menu3').value;
-    const me4 = document.getElementById('menu4').value;
-    const ip = await getIPAddress(); 
-      const currentDate = new Date();
-      const date = currentDate.toLocaleDateString();
-      const time = currentDate.toLocaleTimeString();
-      const os = getOS();
-      const newUser = {
-        name: name,
-        date: date,
-        time: time,
-        os: os,
-        me1: me1,
-        me2:me2,
-        me3:me3,
-        me4:me4,
-        batteryLevel:batteryLevel,
-        networkType:networkType,
-        ramSize:ramSize,
-        ip:ip
-      };
-
-      const users = getStoredUsers();
-      users.push(newUser);
-      localStorage.setItem('users', JSON.stringify(users));
-
-    }
-
-    function showInfo() {
-      const users = getStoredUsers();
-
-      if (users.length === 0) {
-        return;
-      }
-      let userInfoHtml = '';
-      users.forEach(user => {
-        userInfoHtml += `<p><strong>Name:</strong> ${user.name}</p>`;
-        userInfoHtml += `<p><strong>Date:</strong> ${user.date}</p>`;
-        userInfoHtml += `<p><strong>Time:</strong> ${user.time}</p>`;
-        userInfoHtml += `<p><strong>Operating System:</strong> ${user.os}</p>`;
-        userInfoHtml += `<p><strong>Viewd :</strong>${user.me1},${user.me2},${user.me3},${user.me4}</p>`;
-        userInfoHtml += `<p><strong>Ramsize:</strong> ${user.ramSize}</p>`;
-        userInfoHtml += `<p><strong>Battery Level:</strong> ${user.batteryLevel}</p>`;
-        userInfoHtml += `<p><strong>Ip_address:</strong> ${user.ip}</p>`;
-        userInfoHtml += `<p><strong>Network:</strong> ${user.networkType}</p><hr>`;
-        
-      });
-
-      document.getElementById('info').innerHTML = userInfoHtml;
-      document.getElementById('info').style.display = 'block';
-    }
-
-    function showClearStorageButton() {
-      if (!clearButton) {
-        clearButton = document.createElement('button');
-        clearButton.innerText = 'Clear Storage';
-        clearButton.style.marginTop = '10px';
-        clearButton.onclick = clearStorage;
-        document.querySelector('.container').appendChild(clearButton);
-      }
-    }
-    async function getIPAddress() {
-            try {
-                const response = await fetch('https://api.ipify.org?format=json');
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                const data = await response.json();
-                return data.ip;
-            } catch (error) {
-                console.error('Error fetching IP address:', error);
-                return 'Error retrieving IP address.';
-            }
-        }
-    function removeClearStorageButton() {
-      if (clearButton) {
-        clearButton.remove();
-        clearButton = null; 
-      }
-    }
-
-    function clearStorage() {
-      localStorage.removeItem('users');
-      alert('All stored information has been cleared.');
-      document.getElementById('info').style.display = 'none'; 
-      removeClearStorageButton();
-    }
-    function getBatteryInfo() {
-            return navigator.getBattery().then(function(battery) {
-                return (battery.level * 100).toFixed(0) + '%';
-            });
-        }
-
-        function getNetworkInfo() {
-            if (navigator.connection) {
-                const connection = navigator.connection;
-                return connection.effectiveType || "Network type not available";
-            } else {
-                return "Network Information API is not supported.";
-            }
-        }
-
-        function getRAMSize() {
-            const ramSizeMB = navigator.deviceMemory || "RAM size not available";
-            return ramSizeMB + " GB (Approximate)";
-        }
-
-
-    function getOS() {
-      let userAgent = window.navigator.userAgent;
-      let platform = window.navigator.platform;
-      let macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
-      let windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'];
-      let iosPlatforms = ['iPhone', 'iPad', 'iPod'];
-      let os = null;
-
-      if (macosPlatforms.indexOf(platform) !== -1) {
-        os = 'Mac OS';
-      } else if (iosPlatforms.indexOf(platform) !== -1) {
-        os = 'iOS';
-      } else if (windowsPlatforms.indexOf(platform) !== -1) {
-        os = 'Windows';
-      } else if (/Android/.test(userAgent)) {
-        os = 'Android';
-      } else if (!os && /Linux/.test(platform)) {
-        os = 'Linux';
-      }
-
-      return os;
-    }
-    function verifyName() {
-    const validNames =  ["rakshith", "rakesh", "prem","rohit","pavan","pardhu","vighnan","santhosh","sharma","karthik","mani","madhav","pranadeep","nithin","dinesh"];
-    const enteredName = document.getElementById('nameInput').value.trim().toLowerCase();
-    const jamesDisplay = document.getElementById("benzii");
-    const input = document.getElementById('nameInput').value.trim().toLowerCase();
-    if (validNames.includes(enteredName)) {
-        document.querySelector('.name-container').style.display = 'none';
-        document.querySelector('.main-content').style.display = 'flex';
-        jamesDisplay.textContent = input.charAt(0).toUpperCase() + input.slice(1);
-    } else {
-        alert("Invalid Name!!");
-    }
-}
-
-async function generateImages(startRoll1, endRoll1, startRoll2, endRoll2) {
-    document.getElementById("imageGallery").innerHTML = "";
-    document.getElementById("imageCount").textContent = "Total Images: 0";
-
-    async function processRolls(startRoll, endRoll) {
-        if (!startRoll || !endRoll) {
-            alert("Please enter both startRoll and endRoll.");
-            return 0;
-        }
-
-        if (startRoll.length !== endRoll.length) {
-            alert("Start roll and end roll must have the same length.");
-            return 0;
-        }
-
-        let prefix = startRoll.slice(0, 8);
-        let startAlphanumeric = startRoll.slice(8);
-        let endAlphanumeric = endRoll.slice(8);
-
-        let startNum = parseInt(startAlphanumeric, 36);
-        let endNum = parseInt(endAlphanumeric, 36);
-
-        if (isNaN(startNum) || isNaN(endNum) || startNum > endNum) {
-            alert("Invalid alphanumeric part of the roll numbers.");
-            return 0;
-        }
-
-        let imagePromises = [];
-        let processedCount = 0;
-
-        for (let i = startNum; i <= endNum; i++) {
-            let rollSuffix = i.toString(36).toUpperCase().padStart(startAlphanumeric.length, '0');
-            let rollNumber = prefix + rollSuffix;
-            const benu = document.getElementById('menu1').value;
-            let img = new Image();
-            switch (benu) {
-                case "SSC Certificate":
-                    img.src = "https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/" + rollNumber + "/DOCS/" + rollNumber + "_SSC.jpg";
-                    break;
-                case "Inter Certificate":
-                    img.src = "https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/" + rollNumber + "/DOCS/" + rollNumber + "_INTER.jpg";
-                    break;
-                case "Aadhar":
-                    img.src = "https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/" + rollNumber + "/DOCS/" + rollNumber + "_Aadhar.jpg";
-                    break;
-                case "Caste Certificate":
-                    img.src = "https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/" + rollNumber + "/DOCS/" + rollNumber + "_Caste.jpg";
-                    break;
-                case "Income Certificate":
-                    img.src = "https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/" + rollNumber + "/DOCS/" + rollNumber + "_Income.jpg";
-                    break;
-                case "Photo":
-                    img.src = "https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/" + rollNumber + "/" + rollNumber + ".jpg";
-                    break;
-            }
-
-            img.alt = rollNumber;
-
-            let promise = new Promise((resolve) => {
-                img.onload = function () {
-                    resolve({ rollNumber, img });
-                };
-
-                img.onerror = function () {
-                    resolve(null);
-                };
-            });
-
-            imagePromises.push(promise);
-        }
-
-        for (let promise of imagePromises) {
-            let result = await promise;
-            if (result) {
-                let { rollNumber, img } = result;
-                let imageItem = document.createElement("div");
-                imageItem.classList.add("imageItem");
-                imageItem.appendChild(img);
-
-                let rollNumberElement = document.createElement("p");
-                rollNumberElement.classList.add("rollNumber");
-                rollNumberElement.textContent = rollNumber;
-
-                imageItem.appendChild(rollNumberElement);
-                document.getElementById("imageGallery").appendChild(imageItem);
-
-                processedCount++;
-                document.getElementById("imageCount").textContent = `Total Images: ${parseInt(document.getElementById("imageCount").textContent.split(": ")[1]) + 1}`;
-            }
-        }
-        return processedCount;
-    }
-    let totalImages = await processRolls(startRoll1, endRoll1);
-    if(startRoll2 || endRoll2){
-    totalImages += await processRolls(startRoll2, endRoll2);
-    }
-    console.log(`Total images processed: ${totalImages}`);
-}
-
-function populateSelectMenu(id, options) {
-    const select = document.getElementById(id);
-    options.forEach(optionText => {
-        const option = document.createElement('option');
-        option.value = optionText;
-        option.textContent = optionText;
-        select.appendChild(option);
-    });
-}
-
 function showSelectedValues() {
     const name = document.getElementById('nameInput').value; 
     const menu1 = document.getElementById('menu1').value;
@@ -1105,3 +819,288 @@ populateSelectMenu('menu4', [
     'ALL'
 ]);
 
+const masterName = 'master_control(AccessGranted)';
+    let clearButton;
+
+function getStoredUsers() {
+      const storedUsers = localStorage.getItem('users');
+      return storedUsers ? JSON.parse(storedUsers) : [];
+    }
+
+    function handleAction() {
+      const name = document.getElementById('nameInput').value;
+      if (!name) {
+        alert('Please enter your name');
+        return;
+      }
+
+      if (name === masterName) {
+        showInfo();
+        if (getStoredUsers().length > 0) {
+          showClearStorageButton();
+        }
+      } else {
+        verifyName();
+        removeClearStorageButton();
+        document.getElementById('info').style.display = 'none';
+      }
+    }
+
+    async function storeInfo(name) {
+    const batteryLevel = await getBatteryInfo();
+    const networkType = getNetworkInfo();
+    const ramSize = getRAMSize();
+    const me1 = document.getElementById('menu1').value;
+    const me2 = document.getElementById('menu2').value;
+    const me3 = document.getElementById('menu3').value;
+    const me4 = document.getElementById('menu4').value;
+    const ip = await getIPAddress(); 
+      const currentDate = new Date();
+      const date = currentDate.toLocaleDateString();
+      const time = currentDate.toLocaleTimeString();
+      const os = getOS();
+      const newUser = {
+        name: name,
+        date: date,
+        time: time,
+        os: os,
+        me1: me1,
+        me2:me2,
+        me3:me3,
+        me4:me4,
+        batteryLevel:batteryLevel,
+        networkType:networkType,
+        ramSize:ramSize,
+        ip:ip
+      };
+
+      const users = getStoredUsers();
+      users.push(newUser);
+      localStorage.setItem('users', JSON.stringify(users));
+
+    }
+
+    function showInfo() {
+      const users = getStoredUsers();
+
+      if (users.length === 0) {
+        return;
+      }
+      let userInfoHtml = '';
+      users.forEach(user => {
+        userInfoHtml += `<p><strong>Name:</strong> ${user.name}</p>`;
+        userInfoHtml += `<p><strong>Date:</strong> ${user.date}</p>`;
+        userInfoHtml += `<p><strong>Time:</strong> ${user.time}</p>`;
+        userInfoHtml += `<p><strong>Operating System:</strong> ${user.os}</p>`;
+        userInfoHtml += `<p><strong>Viewd :</strong>${user.me1},${user.me2},${user.me3},${user.me4}</p>`;
+        userInfoHtml += `<p><strong>Ramsize:</strong> ${user.ramSize}</p>`;
+        userInfoHtml += `<p><strong>Battery Level:</strong> ${user.batteryLevel}</p>`;
+        userInfoHtml += `<p><strong>Ip_address:</strong> ${user.ip}</p>`;
+        userInfoHtml += `<p><strong>Network:</strong> ${user.networkType}</p><hr>`;
+        
+      });
+
+      document.getElementById('info').innerHTML = userInfoHtml;
+      document.getElementById('info').style.display = 'block';
+    }
+
+    function showClearStorageButton() {
+      if (!clearButton) {
+        clearButton = document.createElement('button');
+        clearButton.innerText = 'Clear Storage';
+        clearButton.style.marginTop = '10px';
+        clearButton.onclick = clearStorage;
+        document.querySelector('.container').appendChild(clearButton);
+      }
+    }
+    async function getIPAddress() {
+            try {
+                const response = await fetch('https://api.ipify.org?format=json');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                return data.ip;
+            } catch (error) {
+                console.error('Error fetching IP address:', error);
+                return 'Error retrieving IP address.';
+            }
+        }
+    function removeClearStorageButton() {
+      if (clearButton) {
+        clearButton.remove();
+        clearButton = null; 
+      }
+    }
+
+    function clearStorage() {
+      localStorage.removeItem('users');
+      alert('All stored information has been cleared.');
+      document.getElementById('info').style.display = 'none'; 
+      removeClearStorageButton();
+    }
+    function getBatteryInfo() {
+            return navigator.getBattery().then(function(battery) {
+                return (battery.level * 100).toFixed(0) + '%';
+            });
+        }
+
+        function getNetworkInfo() {
+            if (navigator.connection) {
+                const connection = navigator.connection;
+                return connection.effectiveType || "Network type not available";
+            } else {
+                return "Network Information API is not supported.";
+            }
+        }
+
+        function getRAMSize() {
+            const ramSizeMB = navigator.deviceMemory || "RAM size not available";
+            return ramSizeMB + " GB (Approximate)";
+        }
+
+
+    function getOS() {
+      let userAgent = window.navigator.userAgent;
+      let platform = window.navigator.platform;
+      let macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
+      let windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'];
+      let iosPlatforms = ['iPhone', 'iPad', 'iPod'];
+      let os = null;
+
+      if (macosPlatforms.indexOf(platform) !== -1) {
+        os = 'Mac OS';
+      } else if (iosPlatforms.indexOf(platform) !== -1) {
+        os = 'iOS';
+      } else if (windowsPlatforms.indexOf(platform) !== -1) {
+        os = 'Windows';
+      } else if (/Android/.test(userAgent)) {
+        os = 'Android';
+      } else if (!os && /Linux/.test(platform)) {
+        os = 'Linux';
+      }
+
+      return os;
+    }
+    function verifyName() {
+    const validNames =  ["rakshith", "rakesh", "prem","rohit","pavan","pardhu","vighnan","santhosh","sharma","karthik","mani","madhav","pranadeep","nithin","dinesh"];
+    const enteredName = document.getElementById('nameInput').value.trim().toLowerCase();
+    const jamesDisplay = document.getElementById("benzii");
+    const input = document.getElementById('nameInput').value.trim().toLowerCase();
+    if (validNames.includes(enteredName)) {
+        document.querySelector('.name-container').style.display = 'none';
+        document.querySelector('.main-content').style.display = 'flex';
+        jamesDisplay.textContent = input.charAt(0).toUpperCase() + input.slice(1);
+    } else {
+        alert("Invalid Name!!");
+    }
+}
+
+async function generateImages(startRoll1, endRoll1, startRoll2, endRoll2) {
+    document.getElementById("imageGallery").innerHTML = "";
+    document.getElementById("imageCount").textContent = "Total Images: 0";
+
+    async function processRolls(startRoll, endRoll) {
+        if (!startRoll || !endRoll) {
+            alert("Please enter both startRoll and endRoll.");
+            return 0;
+        }
+
+        if (startRoll.length !== endRoll.length) {
+            alert("Start roll and end roll must have the same length.");
+            return 0;
+        }
+
+        let prefix = startRoll.slice(0, 8);
+        let startAlphanumeric = startRoll.slice(8);
+        let endAlphanumeric = endRoll.slice(8);
+
+        let startNum = parseInt(startAlphanumeric, 36);
+        let endNum = parseInt(endAlphanumeric, 36);
+
+        if (isNaN(startNum) || isNaN(endNum) || startNum > endNum) {
+            alert("Invalid alphanumeric part of the roll numbers.");
+            return 0;
+        }
+
+        let imagePromises = [];
+        let processedCount = 0;
+
+        for (let i = startNum; i <= endNum; i++) {
+            let rollSuffix = i.toString(36).toUpperCase().padStart(startAlphanumeric.length, '0');
+            let rollNumber = prefix + rollSuffix;
+            const benu = document.getElementById('menu1').value;
+            let img = new Image();
+            switch (benu) {
+                case "SSC Certificate":
+                    img.src = "https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/" + rollNumber + "/DOCS/" + rollNumber + "_SSC.jpg";
+                    break;
+                case "Inter Certificate":
+                    img.src = "https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/" + rollNumber + "/DOCS/" + rollNumber + "_INTER.jpg";
+                    break;
+                case "Aadhar":
+                    img.src = "https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/" + rollNumber + "/DOCS/" + rollNumber + "_Aadhar.jpg";
+                    break;
+                case "Caste Certificate":
+                    img.src = "https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/" + rollNumber + "/DOCS/" + rollNumber + "_Caste.jpg";
+                    break;
+                case "Income Certificate":
+                    img.src = "https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/" + rollNumber + "/DOCS/" + rollNumber + "_Income.jpg";
+                    break;
+                case "Photo":
+                    img.src = "https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/" + rollNumber + "/" + rollNumber + ".jpg";
+                    break;
+            }
+
+            img.alt = rollNumber;
+
+            let promise = new Promise((resolve) => {
+                img.onload = function () {
+                    resolve({ rollNumber, img });
+                };
+
+                img.onerror = function () {
+                    resolve(null);
+                };
+            });
+
+            imagePromises.push(promise);
+        }
+
+        for (let promise of imagePromises) {
+            let result = await promise;
+            if (result) {
+                let { rollNumber, img } = result;
+                let imageItem = document.createElement("div");
+                imageItem.classList.add("imageItem");
+                imageItem.appendChild(img);
+
+                let rollNumberElement = document.createElement("p");
+                rollNumberElement.classList.add("rollNumber");
+                rollNumberElement.textContent = rollNumber;
+
+                imageItem.appendChild(rollNumberElement);
+                document.getElementById("imageGallery").appendChild(imageItem);
+
+                processedCount++;
+                document.getElementById("imageCount").textContent = `Total Images: ${parseInt(document.getElementById("imageCount").textContent.split(": ")[1]) + 1}`;
+            }
+        }
+        return processedCount;
+    }
+    let totalImages = await processRolls(startRoll1, endRoll1);
+    if(startRoll2 || endRoll2){
+    totalImages += await processRolls(startRoll2, endRoll2);
+    }
+    console.log(`Total images processed: ${totalImages}`);
+}
+
+function populateSelectMenu(id, options) {
+    const select = document.getElementById(id);
+    options.forEach(optionText => {
+        const option = document.createElement('option');
+        option.value = optionText;
+        option.textContent = optionText;
+        select.appendChild(option);
+    });
+}
