@@ -1,0 +1,112 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: #333;
+    color: #ddd;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+h2 {
+    color: #eee;
+    margin-bottom: 20px;
+    font-size: 2rem;
+}
+.form-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #ccc;
+}
+input[type="text"] {
+    width: 250px;
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 2px solid #555;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #444;
+    color: #ddd;
+}
+button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+button:hover {
+    background-color: #0056b3;
+}
+#imageGallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+}
+.imageItem {
+    margin: 10px;
+    text-align: center;
+    background: #444;
+    border: 1px solid #555;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+.imageItem img {
+    width: 300px;
+    height: auto;
+    border-bottom: 1px solid #555;
+    transition: transform 0.3s ease;
+}
+.imageItem:hover img {
+    transform: scale(1.05);
+}
+.imageItem:hover {
+    box-shadow: 0 0 30px rgba(0, 255, 0, 0.8);
+}
+.rollNumber {
+    padding: 10px;
+    font-weight: bold;
+    color: #eee;
+}
+#imageCount {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #ccc;
+}
+.select-container {
+    margin-bottom: 20px;
+    align-items: center;
+}
+select {
+    width: 250px;
+    padding: 10px;
+    border: 2px solid #555;
+    border-radius: 5px;
+    background-color: #444;
+    color: #ddd;
+    margin-bottom: 10px;
+}
+#result {
+    color: #eee;
+}
+.name-container {
+    margin-bottom: 20px;
+    text-align: center;
+}
+.form-container, .main-content {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
