@@ -100,7 +100,6 @@ function handleGenerateImages() {
     generateImages(startRoll, endRoll);
 }
 
-const validNames = ["rakshith", "rakesh", "prem","rohit","pavan","pardhu","vighnan","santhosh","sharma","karthik"];
 
 function checkName() {
     const input = document.getElementById("emmaField").value.trim().toLowerCase();
@@ -109,12 +108,12 @@ function checkName() {
     const hide = document.getElementById("hide");
     const jamesDisplay = document.getElementById("jamesDisplay");
 
-    if (validNames.includes(input)) {
+    if (!input) {
+         alert("Name not found. Please try again.");
+    } else {
         johnSection.classList.add("hidden");
         aliceMessage.classList.remove("hidden");
         jamesDisplay.textContent = input.charAt(0).toUpperCase() + input.slice(1);
         hide.classList.remove("hide");
-    } else {
-        alert("Name not found. Please try again.");
     }
 }
