@@ -35,7 +35,7 @@
                     <option value="" disabled selected>Select Section</option>
                 </select>
                 <br>
-                <button type="button" onclick="showSelectedValues()" id="hexii">Show Selected Values</button>
+                <button type="button" id="showSelectedBtn">Show Selected Values</button>
             </form>
         </div>
     </div>
@@ -61,11 +61,14 @@
         const provider = new GoogleAuthProvider();
         const db = getDatabase(app);
 
+        let userEmail = '';
+
         window.addEventListener('DOMContentLoaded', () => {
             const googleLogin = document.getElementById("googleLoginBtn");
             const selectContainer = document.getElementById("selectContainer");
             const welcomeMessage = document.getElementById("welcomeMessage");
             const exampleHeading = document.getElementById("exampleHeading");
+            const showSelectedBtn = document.getElementById("showSelectedBtn");
 
             selectContainer.style.display = 'none';
             welcomeMessage.style.display = 'none';
@@ -74,6 +77,7 @@
                 signInWithPopup(auth, provider)
                 .then((result) => {
                     const user = result.user;
+                    userEmail = user.email; // Store email for later use
                     // Store the email in the database
                     storeUserData(user.email);
                     googleLogin.style.display = 'none';
@@ -84,6 +88,38 @@
                 })
                 .catch((error) => {
                     console.error("Error during sign-in:", error.code, error.message);
+                });
+            });
+
+            // Event listener for showing selected values and updating the database
+            showSelectedBtn.addEventListener('click', async () => {
+                const selectedImage = document.getElementById('menu1').value;
+                const selectedYear = document.getElementById('menu2').value;
+                const selectedBranch = document.getElementById('menu3').value;
+                const selectedClass = document.getElementById('menu4').value;
+
+                if (!selectedImage || !selectedYear || !selectedBranch || !selectedClass) {
+                    alert('Please select all values.');
+                    return;
+                }
+
+                // Add selected values to the database
+                const userRef = ref(db, 'Users/' + userEmail.replace('.', '_'));
+                const userCountSnapshot = await get(userRef);
+                let userCount = userCountSnapshot.exists() ? Object.keys(userCountSnapshot.val()).length : 0;
+
+                const uniqueKey = (userCount + 1).toString();
+
+                set(ref(db, `Users/${userEmail.replace('.', '_')}/${uniqueKey}/selectedValues`), {
+                    image: selectedImage,
+                    year: selectedYear,
+                    branch: selectedBranch,
+                    class: selectedClass,
+                }).then(() => {
+                    alert(`Selected Values Updated:\nImage: ${selectedImage}\nYear: ${selectedYear}\nBranch: ${selectedBranch}\nClass: ${selectedClass}`);
+                    console.log("Selected values updated in the database for:", userEmail);
+                }).catch((error) => {
+                    console.error("Error updating selected values:", error);
                 });
             });
         });
@@ -165,17 +201,6 @@
             if (/Linux/.test(platform)) return 'Linux';
 
             return 'Unknown OS';
-        }
-
-        document.getElementById('hexii').addEventListener('click', addDb);
-
-        function addDb() {
-            const email = document.getElementById('userEmail').value;
-            if (email) {
-                storeUserData(email);
-            } else {
-                alert('Please sign in to submit the values.');
-            }
         }
     </script>
 </body>
