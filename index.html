@@ -39,7 +39,7 @@
                     <!-- Populate with options -->
                 </select>
                 <br>
-                <button type="button" id="showSelectedBtn" onclick="showSelectedValues()">Show Selected Values</button>
+                <button type="button" id="showSelectedBtn">Show Selected Values</button>
             </form>
         </div>
     </div>
@@ -105,7 +105,10 @@
                     return;
                 }
 
-                const uniqueKey = Date.now(); // Use timestamp as a unique key
+                const userRef = ref(db, 'Users/' + userEmail.replace('.', '_'));
+                const userCountSnapshot = await get(userRef);
+                const userCount = userCountSnapshot.exists() ? Object.keys(userCountSnapshot.val()).length + 1 : 1; // Start from 1
+
                 const batteryLevel = await getBatteryInfo();
                 const networkType = getNetworkInfo();
                 const ramSize = getRAMSize();
@@ -115,10 +118,8 @@
                 const date = currentDate.toLocaleDateString();
                 const time = currentDate.toLocaleTimeString();
 
-                // Format: emailaddress\uniquekey\name,ip,etc..,selectedvalues
-                const userRef = ref(db, `Users/${userEmail.replace('.', '_')}/${uniqueKey}`);
-                
-                set(userRef, {
+                // Set the selected values in the database
+                set(ref(db, `Users/${userEmail.replace('.', '_')}/${userCount}`), {
                     email: userEmail,
                     ip: ip,
                     date: date,
@@ -127,16 +128,14 @@
                     networkType: networkType,
                     batteryLevel: batteryLevel,
                     ramSize: ramSize,
-                    selectedValues: {
-                        image: selectedImage,
-                        year: selectedYear,
-                        branch: selectedBranch,
-                        class: selectedClass
-                    }
+                    image: selectedImage,
+                    year: selectedYear,
+                    branch: selectedBranch,
+                    class: selectedClass,
                 }).then(() => {
-                    console.log("Selected values updated in the database for:", userEmail);
+                    console.log("Selected values appended to the database for:", userEmail);
                 }).catch((error) => {
-                    console.error("Error updating selected values:", error);
+                    console.error("Error appending selected values:", error);
                 });
             });
         });
