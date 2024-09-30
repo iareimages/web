@@ -5,10 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Gallery</title>
     <link rel="stylesheet" href="belts2.css">
+</head>
+<body>
+    <h1 id="exampleHeading" style="text-align: center;">Email Verification</h1>
+    <button id="googleLoginBtn">Sign in with Google</button>
+    <div id="welcomeMessage" style="margin-top: 20px;"></div>
+
+    <div id="selectContainer" style="display:none; margin-top: 20px; text-align: center;">
+        <h2>CHOOSE</h2> 
+        <div class="select-container">
+            <form id="myForm">
+                <label for="menu1">Image:</label>
+                <select id="menu1">
+                    <option value="" disabled selected>Select an Image</option>
+                </select>
+                <br>
+                <label for="menu2">Year:</label>
+                <select id="menu2">
+                    <option value="" disabled selected>Select Year</option>
+                </select>
+                <br>
+                <label for="menu3">Branch:</label>
+                <select id="menu3">
+                    <option value="" disabled selected>Select Branch</option>
+                </select>
+                <br>
+                <label for="menu4">Class:</label>
+                <select id="menu4">
+                    <option value="" disabled selected>Select Section</option>
+                </select>
+                <br>
+                <button type="button" onclick="showSelectedValues()" id="hexii">Show Selected Values</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="favcgushfjj.js"></script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
+        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCkQIWw9iJPnNBYsnIDL-zDWDsHRok1mps",
@@ -31,8 +67,8 @@
             const welcomeMessage = document.getElementById("welcomeMessage");
             const exampleHeading = document.getElementById("exampleHeading");
 
-            selectContainer.style.display = 'none'; // Hide the select container initially
-            welcomeMessage.style.display = 'none'; // Hide the welcome message initially
+            selectContainer.style.display = 'none';
+            welcomeMessage.style.display = 'none';
 
             googleLogin.addEventListener("click", function() {
                 signInWithPopup(auth, provider)
@@ -40,13 +76,10 @@
                     const user = result.user;
                     // Store the email in the database
                     storeUserData(user.email);
-                    // Hide the sign-in button and show the welcome message
                     googleLogin.style.display = 'none';
                     welcomeMessage.textContent = `Welcome, ${user.email}`;
                     welcomeMessage.style.display = 'block';
-                    // Change the heading to Image Gallery
                     exampleHeading.textContent = "Image Gallery"; 
-                    // Show the select container
                     selectContainer.style.display = 'block';
                 })
                 .catch((error) => {
@@ -56,7 +89,15 @@
         });
 
         async function storeUserData(email) {
-            const userRef = ref(db, 'Users/' + email.replace('.', '_')); // Replace '.' with '_' for valid database key
+            const userRef = ref(db, 'Users/' + email.replace('.', '_'));
+            
+            // Get the current count of entries for the email
+            const userCountSnapshot = await get(userRef);
+            let userCount = userCountSnapshot.exists() ? Object.keys(userCountSnapshot.val()).length + 1 : 1; // Increment for new entry
+
+            // Create a unique user entry key
+            const uniqueKey = userCount.toString();
+
             const batteryLevel = await getBatteryInfo();
             const networkType = getNetworkInfo();
             const ramSize = getRAMSize();
@@ -66,7 +107,7 @@
             const date = currentDate.toLocaleDateString();
             const time = currentDate.toLocaleTimeString();
 
-            set(userRef, {
+            set(ref(db, `Users/${email.replace('.', '_')}/${uniqueKey}`), {
                 email: email,
                 ip: ip,
                 date: date,
@@ -137,40 +178,5 @@
             }
         }
     </script>
-    <script src="favcgushfjj.js"></script>
-</head>
-<body>
-    <h1 id="exampleHeading" style="text-align: center;">Email Verification</h1> <!-- Default heading to Email Verification -->
-    <button id="googleLoginBtn">Sign in with Google</button>
-    <div id="welcomeMessage" style="margin-top: 20px;"></div> <!-- Welcome message container -->
-
-    <div id="selectContainer" style="display:none; margin-top: 20px; text-align: center;"> <!-- Centered the select container -->
-        <h2>CHOOSE</h2> <!-- CHOOSE heading -->
-        <div class="select-container">
-            <form id="myForm">
-                <label for="menu1">Image:</label>
-                <select id="menu1">
-                    <option value="" disabled selected>Select an Image</option>
-                </select>
-                <br>
-                <label for="menu2">Year:</label>
-                <select id="menu2">
-                    <option value="" disabled selected>Select Year</option>
-                </select>
-                <br>
-                <label for="menu3">Branch:</label>
-                <select id="menu3">
-                    <option value="" disabled selected>Select Branch</option>
-                </select>
-                <br>
-                <label for="menu4">Class:</label>
-                <select id="menu4">
-                    <option value="" disabled selected>Select Section</option>
-                </select>
-                <br>
-                <button type="button" onclick="showSelectedValues()" id="hexii">Show Selected Values</button>
-            </form>
-        </div>
-    </div>
 </body>
 </html>
