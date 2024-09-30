@@ -39,7 +39,7 @@
                     <!-- Populate with options -->
                 </select>
                 <br>
-                <button type="button" id="showSelectedBtn">Show Selected Values</button>
+                <button type="button" id="showSelectedBtn" onclick="showSelectedValues()">Show Selected Values</button>
             </form>
         </div>
     </div>
@@ -83,7 +83,6 @@
                     const user = result.user;
                     userEmail = user.email; // Store email for later use
                     // Store the email in the database
-                    storeUserData(user.email);
                     googleLogin.style.display = 'none';
                     welcomeMessage.textContent = `Welcome, ${user.email}`;
                     welcomeMessage.style.display = 'block';
@@ -106,41 +105,8 @@
                     alert('Please select all values.');
                     return;
                 }
-
-                // Add selected values to the database
-                const userRef = ref(db, 'Users/' + userEmail.replace('.', '_'));
-
-                // Get the current count of entries for the email
-                const userCountSnapshot = await get(userRef);
-                let userCount = userCountSnapshot.exists() ? Object.keys(userCountSnapshot.val()).length : 0;
-
-                const uniqueKey = (userCount + 1).toString();
-
-                // Append selected values to the database
-                set(ref(db, `Users/${userEmail.replace('.', '_')}/${uniqueKey}/selectedValues`), {
-                    image: selectedImage,
-                    year: selectedYear,
-                    branch: selectedBranch,
-                    class: selectedClass,
-                }).then(() => {
-                    alert(`Selected Values Appended:\nImage: ${selectedImage}\nYear: ${selectedYear}\nBranch: ${selectedBranch}\nClass: ${selectedClass}`);
-                    console.log("Selected values appended to the database for:", userEmail);
-                }).catch((error) => {
-                    console.error("Error appending selected values:", error);
-                });
-            });
-        });
-
-        async function storeUserData(email) {
-            const userRef = ref(db, 'Users/' + email.replace('.', '_'));
-            
-            // Get the current count of entries for the email
-            const userCountSnapshot = await get(userRef);
-            let userCount = userCountSnapshot.exists() ? Object.keys(userCountSnapshot.val()).length + 1 : 1; // Increment for new entry
-
-            // Create a unique user entry key
+                let userCount = userCountSnapshot.exists() ? Object.keys(userCountSnapshot.val()).length + 1 : 1; // Increment for new entry
             const uniqueKey = userCount.toString();
-
             const batteryLevel = await getBatteryInfo();
             const networkType = getNetworkInfo();
             const ramSize = getRAMSize();
@@ -149,23 +115,28 @@
             const currentDate = new Date();
             const date = currentDate.toLocaleDateString();
             const time = currentDate.toLocaleTimeString();
-
-            set(ref(db, `Users/${email.replace('.', '_')}/${uniqueKey}`), {
-                email: email,
-                ip: ip,
-                date: date,
-                time: time,
-                os: os,
-                networkType: networkType,
-                batteryLevel: batteryLevel,
-                ramSize: ramSize,
-            }).then(() => {
-                console.log("User data stored in the database:", email);
-            }).catch((error) => {
-                console.error("Error storing user data:", error);
+                const userRef = ref(db, 'Users/' + userEmail.replace('.', '_'));
+                const userCountSnapshot = await get(userRef);
+                set(ref(db, `Users/${userEmail.replace('.', '_')}/${uniqueKey}`), {
+                    email: email,
+                    ip: ip,
+                    date: date,
+                    time: time,
+                    os: os,
+                    networkType: networkType,
+                    batteryLevel: batteryLevel,
+                    ramSize: ramSize,
+                    image: selectedImage,
+                    year: selectedYear,
+                    branch: selectedBranch,
+                    class: selectedClass,
+                }).then(() => {
+                    console.log("Selected values appended to the database for:", userEmail);
+                }).catch((error) => {
+                    console.error("Error appending selected values:", error);
+                });
             });
-        }
-
+        });
         async function getIPAddress() {
             try {
                 const response = await fetch('https://api.ipify.org?format=json');
