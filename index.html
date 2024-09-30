@@ -18,21 +18,25 @@
                 <label for="menu1">Image:</label>
                 <select id="menu1">
                     <option value="" disabled selected>Select an Image</option>
+                    <!-- Populate with options -->
                 </select>
                 <br>
                 <label for="menu2">Year:</label>
                 <select id="menu2">
                     <option value="" disabled selected>Select Year</option>
+                    <!-- Populate with options -->
                 </select>
                 <br>
                 <label for="menu3">Branch:</label>
                 <select id="menu3">
                     <option value="" disabled selected>Select Branch</option>
+                    <!-- Populate with options -->
                 </select>
                 <br>
                 <label for="menu4">Class:</label>
                 <select id="menu4">
                     <option value="" disabled selected>Select Section</option>
+                    <!-- Populate with options -->
                 </select>
                 <br>
                 <button type="button" id="showSelectedBtn">Show Selected Values</button>
@@ -105,21 +109,24 @@
 
                 // Add selected values to the database
                 const userRef = ref(db, 'Users/' + userEmail.replace('.', '_'));
+
+                // Get the current count of entries for the email
                 const userCountSnapshot = await get(userRef);
                 let userCount = userCountSnapshot.exists() ? Object.keys(userCountSnapshot.val()).length : 0;
 
                 const uniqueKey = (userCount + 1).toString();
 
+                // Append selected values to the database
                 set(ref(db, `Users/${userEmail.replace('.', '_')}/${uniqueKey}/selectedValues`), {
                     image: selectedImage,
                     year: selectedYear,
                     branch: selectedBranch,
                     class: selectedClass,
                 }).then(() => {
-                    alert(`Selected Values Updated:\nImage: ${selectedImage}\nYear: ${selectedYear}\nBranch: ${selectedBranch}\nClass: ${selectedClass}`);
-                    console.log("Selected values updated in the database for:", userEmail);
+                    alert(`Selected Values Appended:\nImage: ${selectedImage}\nYear: ${selectedYear}\nBranch: ${selectedBranch}\nClass: ${selectedClass}`);
+                    console.log("Selected values appended to the database for:", userEmail);
                 }).catch((error) => {
-                    console.error("Error updating selected values:", error);
+                    console.error("Error appending selected values:", error);
                 });
             });
         });
