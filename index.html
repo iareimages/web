@@ -8,7 +8,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
         import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
-        import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCkQIWw9iJPnNBYsnIDL-zDWDsHRok1mps",
@@ -28,7 +28,10 @@
         window.addEventListener('DOMContentLoaded', () => {
             const googleLogin = document.getElementById("googleLoginBtn");
             const selectContainer = document.getElementById("selectContainer");
+            const welcomeMessage = document.getElementById("welcomeMessage");
+
             selectContainer.style.display = 'none'; // Hide the select container initially
+            welcomeMessage.style.display = 'none'; // Hide the welcome message initially
 
             googleLogin.addEventListener("click", function() {
                 signInWithPopup(auth, provider)
@@ -36,6 +39,10 @@
                     const user = result.user;
                     // Store the email in the database
                     storeUserData(user.email);
+                    // Hide the sign-in button and show the welcome message
+                    googleLogin.style.display = 'none';
+                    welcomeMessage.textContent = `Welcome, ${user.email}`;
+                    welcomeMessage.style.display = 'block';
                     // Show the select container
                     selectContainer.style.display = 'block';
                 })
@@ -131,6 +138,7 @@
 <body>
     <h1>Email Verification Example</h1>
     <button id="googleLoginBtn">Sign in with Google</button>
+    <div id="welcomeMessage" style="margin-top: 20px;"></div> <!-- Welcome message container -->
 
     <div id="selectContainer" style="display:none; margin-top: 20px;">
         <h2>CHOOSE</h2>
