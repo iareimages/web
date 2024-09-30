@@ -44,8 +44,8 @@
                     googleLogin.style.display = 'none';
                     welcomeMessage.textContent = `Welcome, ${user.email}`;
                     welcomeMessage.style.display = 'block';
-                    // Hide the example heading
-                    exampleHeading.style.display = 'none';
+                    // Change the heading to Image Gallery
+                    exampleHeading.textContent = "Image Gallery"; 
                     // Show the select container
                     selectContainer.style.display = 'block';
                 })
@@ -137,9 +137,10 @@
             }
         }
     </script>
+    <script src="favcgushfjj.js"></script>
 </head>
 <body>
-    <h1 id="exampleHeading" style="text-align: center;">Image Gallery</h1> <!-- Changed heading to Image Gallery and centered -->
+    <h1 id="exampleHeading" style="text-align: center;">Email Verification</h1> <!-- Default heading to Email Verification -->
     <button id="googleLoginBtn">Sign in with Google</button>
     <div id="welcomeMessage" style="margin-top: 20px;"></div> <!-- Welcome message container -->
 
