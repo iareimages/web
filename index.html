@@ -127,7 +127,7 @@
                     alert('Please select all values.');
                     return;
                 }
-
+                await showSelectedValues();
                 // Your existing logic for appending data to the database
                 const userRef = ref(db, 'Users/' + userEmail.replace('.', '_'));
                 const userCountSnapshot = await get(userRef);
