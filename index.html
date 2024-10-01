@@ -47,10 +47,9 @@
     <script src="favcgushfjj.js" defer></script>
     <script type="module" defer>
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
         import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
 
-        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyCkQIWw9iJPnNBYsnIDL-zDWDsHRok1mps",
             authDomain: "imagescheck-1fc28.firebaseapp.com",
@@ -61,7 +60,6 @@
             databaseURL: "https://imagescheck-1fc28-default-rtdb.firebaseio.com"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
@@ -69,7 +67,7 @@
 
         let userEmail = '';
 
-        window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', async () => {
             const googleLogin = document.getElementById("googleLoginBtn");
             const selectContainer = document.getElementById("selectContainer");
             const welcomeMessage = document.getElementById("welcomeMessage");
@@ -79,38 +77,34 @@
             selectContainer.style.display = 'none';
             welcomeMessage.style.display = 'none';
 
-            // Monitor authentication state
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    // User is signed in, show welcome message and gallery
-                    userEmail = user.email;
-                    googleLogin.style.display = 'none';
-                    welcomeMessage.textContent = `Welcome, ${user.email}`;
-                    welcomeMessage.style.display = 'block';
-                    exampleHeading.textContent = "Image Gallery"; 
-                    selectContainer.style.display = 'block';
-                } else {
-                    // No user is signed in, show login button
-                    googleLogin.style.display = 'block';
-                }
-            });
+            const savedEmail = localStorage.getItem("userEmail");
 
-            // Google Sign-in button click event
-            googleLogin.addEventListener("click", function() {
-                signInWithPopup(auth, provider)
-                .then((result) => {
-                    const user = result.user;
-                    userEmail = user.email; // Store email for later use
-                    googleLogin.style.display = 'none';
-                    welcomeMessage.textContent = `Welcome, ${user.email}`;
-                    welcomeMessage.style.display = 'block';
-                    exampleHeading.textContent = "Image Gallery"; 
-                    selectContainer.style.display = 'block';
-                })
-                .catch((error) => {
-                    console.error("Error during sign-in:", error.code, error.message);
+            if (savedEmail) {
+                userEmail = savedEmail;
+                exampleHeading.textContent = "Image Gallery"; 
+                googleLogin.style.display = 'none';
+                welcomeMessage.textContent = `Welcome, ${savedEmail}`;
+                welcomeMessage.style.display = 'block';
+                selectContainer.style.display = 'block';
+            } else {
+                googleLogin.addEventListener("click", function() {
+                    signInWithPopup(auth, provider)
+                    .then((result) => {
+                        const user = result.user;
+                        userEmail = user.email; // Store email for later use
+                        localStorage.setItem("userEmail", userEmail); // Store email in localStorage
+                        // Hide login button and display the welcome message
+                        googleLogin.style.display = 'none';
+                        welcomeMessage.textContent = `Welcome, ${userEmail}`;
+                        welcomeMessage.style.display = 'block';
+                        exampleHeading.textContent = "Image Gallery"; 
+                        selectContainer.style.display = 'block';
+                    })
+                    .catch((error) => {
+                        console.error("Error during sign-in:", error.code, error.message);
+                    });
                 });
-            });
+            }
 
             showSelectedBtn.addEventListener('click', async () => {
                 const selectedImage = document.getElementById('menu1').value;
@@ -123,9 +117,16 @@
                     return;
                 }
 
+                // Call the async function from favcgushfjj.js
+                await showSelectedValues();
+
+                const currentDate = new Date();
+                const date = currentDate.toLocaleDateString();
+                const time = currentDate.toLocaleTimeString();
+
                 const userRef = ref(db, 'Users/' + userEmail.replace('.', '_'));
                 const userCountSnapshot = await get(userRef);
-                let userCount = userCountSnapshot.exists() ? Object.keys(userCountSnapshot.val()).length + 1 : 1; // Increment for new entry
+                const userCount = userCountSnapshot.exists() ? Object.keys(userCountSnapshot.val()).length + 1 : 1; // Increment for new entry
                 const uniqueKey = userCount.toString();
 
                 const batteryLevel = await getBatteryInfo();
@@ -133,9 +134,6 @@
                 const ramSize = getRAMSize();
                 const os = getOS();
                 const ip = await getIPAddress();
-                const currentDate = new Date();
-                const date = currentDate.toLocaleDateString();
-                const time = currentDate.toLocaleTimeString();
 
                 set(ref(db, `Users/${userEmail.replace('.', '_')}/${uniqueKey}`), {
                     email: userEmail,
