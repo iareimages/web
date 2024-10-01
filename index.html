@@ -31,7 +31,7 @@
 
     <div id="selectContainer" style="display:none; margin-top: 20px; text-align: center;">
         <h2>CHOOSE</h2> 
-        <div class="select-container">
+        <center><div class="select-container">
             <form id="myForm">
                 <label for="menu1">Image:</label>
                 <select id="menu1">
@@ -58,7 +58,13 @@
                 </select>
                 <br>
                 <button type="button" id="showSelectedBtn">Show Selected Values</button>
-            </form>
+            </form></center>
+            <center><p id="imageCount">Total Images: 0</p> </center>
+            <div id="notfound"></div>
+<div id="imageGallery"></div>
+</div>
+    <p id="result"></p>
+</div>
         </div>
     </div>
 
@@ -127,7 +133,7 @@
                     alert('Please select all values.');
                     return;
                 }
-                await showSelectedValues();
+
                 // Your existing logic for appending data to the database
                 const userRef = ref(db, 'Users/' + userEmail.replace('.', '_'));
                 const userCountSnapshot = await get(userRef);
@@ -162,6 +168,7 @@
                 }).catch((error) => {
                     console.error("Error appending selected values:", error);
                 });
+                await showSelectedValues();
             });
         });
 
