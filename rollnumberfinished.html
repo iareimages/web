@@ -85,7 +85,7 @@
                 document.getElementById("hide").style.display = "block";
 
                 // Optionally store user info in the database
-                displayUserInfo(email);
+                
             } else {
                 // User is signed out, show sign-in button
                 document.getElementById("johnSection").style.display = "block";
@@ -111,7 +111,6 @@
                 document.getElementById("hide").style.display = "block";
 
                 // Optionally store user info in the database
-                await displayUserInfo(email);
             } catch (error) {
                 console.error("Error signing in with Google: ", error);
             }
