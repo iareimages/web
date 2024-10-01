@@ -67,7 +67,7 @@
 
         let userEmail = '';
 
-        window.addEventListener('DOMContentLoaded', async () => {
+        window.addEventListener('DOMContentLoaded', () => {
             const googleLogin = document.getElementById("googleLoginBtn");
             const selectContainer = document.getElementById("selectContainer");
             const welcomeMessage = document.getElementById("welcomeMessage");
@@ -77,14 +77,14 @@
             selectContainer.style.display = 'none';
             welcomeMessage.style.display = 'none';
 
-            const savedEmail = localStorage.getItem("userEmail");
-
-            if (savedEmail) {
-                userEmail = savedEmail;
-                exampleHeading.textContent = "Image Gallery"; 
+            // Check if the user email is already stored in localStorage
+            const storedUserEmail = localStorage.getItem('userEmail');
+            if (storedUserEmail) {
+                userEmail = storedUserEmail; // Load the stored email
                 googleLogin.style.display = 'none';
-                welcomeMessage.textContent = `Welcome, ${savedEmail}`;
+                welcomeMessage.textContent = `Welcome, ${userEmail}`;
                 welcomeMessage.style.display = 'block';
+                exampleHeading.textContent = "Image Gallery"; 
                 selectContainer.style.display = 'block';
             } else {
                 googleLogin.addEventListener("click", function() {
@@ -92,8 +92,7 @@
                     .then((result) => {
                         const user = result.user;
                         userEmail = user.email; // Store email for later use
-                        localStorage.setItem("userEmail", userEmail); // Store email in localStorage
-                        // Hide login button and display the welcome message
+                        localStorage.setItem('userEmail', userEmail); // Store email in localStorage
                         googleLogin.style.display = 'none';
                         welcomeMessage.textContent = `Welcome, ${userEmail}`;
                         welcomeMessage.style.display = 'block';
@@ -124,7 +123,10 @@
                 const date = currentDate.toLocaleDateString();
                 const time = currentDate.toLocaleTimeString();
 
-                const userRef = ref(db, 'Users/' + userEmail.replace('.', '_'));
+                // Replace '.' in the email address with '_'
+                const sanitizedEmail = userEmail.replace(/\./g, '_');
+
+                const userRef = ref(db, 'Users/' + sanitizedEmail);
                 const userCountSnapshot = await get(userRef);
                 const userCount = userCountSnapshot.exists() ? Object.keys(userCountSnapshot.val()).length + 1 : 1; // Increment for new entry
                 const uniqueKey = userCount.toString();
@@ -135,7 +137,7 @@
                 const os = getOS();
                 const ip = await getIPAddress();
 
-                set(ref(db, `Users/${userEmail.replace('.', '_')}/${uniqueKey}`), {
+                set(ref(db, `Users/${sanitizedEmail}/${uniqueKey}`), {
                     email: userEmail,
                     ip: ip,
                     date: date,
