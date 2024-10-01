@@ -5,9 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Gallery</title>
     <link rel="stylesheet" href="belts2.css">
+    <style>
+        /* Add custom styles for the profile image */
+        #profileImage {
+            width: 50px; /* Adjust the size as needed */
+            height: 50px; /* Adjust the size as needed */
+            border-radius: 50%; /* Make it circular */
+            margin-left: 20px; /* Spacing from the text */
+        }
+        #headerContainer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Align items to both sides */
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1 id="exampleHeading" style="text-align: center;">Email Verification</h1>
+    <div id="headerContainer">
+        <h1 id="exampleHeading">Email Verification</h1>
+        <img id="profileImage" src="" alt="Profile Image" style="display: none;">
+    </div>
     <button id="googleLoginBtn">Sign in with Google</button>
     <div id="welcomeMessage" style="margin-top: 20px;"></div>
 
@@ -66,25 +84,32 @@
         const db = getDatabase(app);
 
         let userEmail = '';
+        let userProfileImage = '';
 
         // Check authentication state on page load
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 userEmail = user.email;
+                userProfileImage = user.photoURL; // Get the user's profile image URL
                 const welcomeMessage = document.getElementById("welcomeMessage");
                 const exampleHeading = document.getElementById("exampleHeading");
                 const selectContainer = document.getElementById("selectContainer");
                 const googleLogin = document.getElementById("googleLoginBtn");
+                const profileImage = document.getElementById("profileImage");
 
                 googleLogin.style.display = 'none';
                 welcomeMessage.textContent = `Welcome, ${userEmail}`;
                 welcomeMessage.style.display = 'block';
                 exampleHeading.textContent = "Image Gallery"; 
                 selectContainer.style.display = 'block';
+                profileImage.src = userProfileImage; // Set the profile image source
+                profileImage.style.display = 'block'; // Show the profile image
             } else {
                 // User is not signed in
                 const googleLogin = document.getElementById("googleLoginBtn");
                 googleLogin.style.display = 'block';
+                const profileImage = document.getElementById("profileImage");
+                profileImage.style.display = 'none'; // Hide profile image when not logged in
             }
         });
 
