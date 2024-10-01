@@ -47,7 +47,7 @@
     <script src="favcgushfjj.js" defer></script>
     <script type="module" defer>
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
         import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
 
         const firebaseConfig = {
@@ -67,31 +67,30 @@
 
         let userEmail = '';
 
+        // Check authentication state on page load
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                userEmail = user.email;
+                const welcomeMessage = document.getElementById("welcomeMessage");
+                const exampleHeading = document.getElementById("exampleHeading");
+                const selectContainer = document.getElementById("selectContainer");
+                const googleLogin = document.getElementById("googleLoginBtn");
+
+                googleLogin.style.display = 'none';
+                welcomeMessage.textContent = `Welcome, ${userEmail}`;
+                welcomeMessage.style.display = 'block';
+                exampleHeading.textContent = "Image Gallery"; 
+                selectContainer.style.display = 'block';
+            } else {
+                // User is not signed in
+                const googleLogin = document.getElementById("googleLoginBtn");
+                googleLogin.style.display = 'block';
+            }
+        });
+
         window.addEventListener('DOMContentLoaded', () => {
-            const googleLogin = document.getElementById("googleLoginBtn");
             const selectContainer = document.getElementById("selectContainer");
-            const welcomeMessage = document.getElementById("welcomeMessage");
-            const exampleHeading = document.getElementById("exampleHeading");
             const showSelectedBtn = document.getElementById("showSelectedBtn");
-
-            selectContainer.style.display = 'none';
-            welcomeMessage.style.display = 'none';
-
-            googleLogin.addEventListener("click", function() {
-                signInWithPopup(auth, provider)
-                .then((result) => {
-                    const user = result.user;
-                    userEmail = user.email; // Store email for later use
-                    googleLogin.style.display = 'none';
-                    welcomeMessage.textContent = `Welcome, ${user.email}`;
-                    welcomeMessage.style.display = 'block';
-                    exampleHeading.textContent = "Image Gallery"; 
-                    selectContainer.style.display = 'block';
-                })
-                .catch((error) => {
-                    console.error("Error during sign-in:", error.code, error.message);
-                });
-            });
 
             showSelectedBtn.addEventListener('click', async () => {
                 const selectedImage = document.getElementById('menu1').value;
@@ -104,15 +103,11 @@
                     return;
                 }
 
-                // Fetch the user count snapshot
+                // Your existing logic for appending data to the database
                 const userRef = ref(db, 'Users/' + userEmail.replace('.', '_'));
                 const userCountSnapshot = await get(userRef);
-
-                // Increment user count
                 let userCount = userCountSnapshot.exists() ? Object.keys(userCountSnapshot.val()).length + 1 : 1; // Increment for new entry
                 const uniqueKey = userCount.toString();
-
-                // Get device info
                 const batteryLevel = await getBatteryInfo();
                 const networkType = getNetworkInfo();
                 const ramSize = getRAMSize();
@@ -122,9 +117,8 @@
                 const date = currentDate.toLocaleDateString();
                 const time = currentDate.toLocaleTimeString();
 
-                // Append selected values to the database
-                await set(ref(db, `Users/${userEmail.replace('.', '_')}/${uniqueKey}`), {
-                    email: userEmail, // Correctly use userEmail
+                set(ref(db, `Users/${userEmail.replace('.', '_')}/${uniqueKey}`), {
+                    email: userEmail,
                     ip: ip,
                     date: date,
                     time: time,
