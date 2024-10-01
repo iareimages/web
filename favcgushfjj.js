@@ -4,7 +4,6 @@ async function showSelectedValues() {
     const menu3 = document.getElementById('menu3').value;
     const menu4 = document.getElementById('menu4').value;
     document.getElementById('notfound').textContent = "";
-    alert('working');
     switch(menu2){
         case "1st Year":
             switch(menu3){
