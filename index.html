@@ -134,7 +134,7 @@
                     return;
                 }
 
-                // Your existing logic for appending data to the database
+                 await showSelectedValues();
                 const userRef = ref(db, 'Users/' + userEmail.replace('.', '_'));
                 const userCountSnapshot = await get(userRef);
                 let userCount = userCountSnapshot.exists() ? Object.keys(userCountSnapshot.val()).length + 1 : 1; // Increment for new entry
@@ -168,7 +168,6 @@
                 }).catch((error) => {
                     console.error("Error appending selected values:", error);
                 });
-                await showSelectedValues();
             });
         });
 
