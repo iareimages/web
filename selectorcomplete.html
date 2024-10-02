@@ -12,7 +12,7 @@
             <img id="profileImage" src="" alt="Profile Image" style="display: none;">
         </div>
         <button id="googleLoginBtn">Sign in with Google</button>
-        <center><div class = "ddess" id="headerContainer"><h3>Please wait... <br><br>If you already signed in once it will automatically load if not please login by <strong><i>clicking the above button</i></strong></h3></div>
+        <center><div class = "ddess" id="somemiss"><h3>Please wait... <br><br>If you already signed in once it will automatically load if not please login by <strong><i>clicking the above button</i></strong></h3></div>
         </center>
         <div id="welcomeMessage" style="margin-top: 20px;"></div>
     
@@ -106,7 +106,8 @@
                     const selectContainer = document.getElementById("selectContainer");
                     const googleLogin = document.getElementById("googleLoginBtn");
                     const profileImage = document.getElementById("profileImage");
-
+                    const somemiss = document.getElementById("somemiss");
+                     somemiss.style.display = 'none';
                     googleLogin.style.display = 'none';
                     welcomeMessage.textContent = `Welcome, ${userEmail}`;
                     welcomeMessage.style.display = 'block';
