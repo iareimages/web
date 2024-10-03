@@ -140,7 +140,7 @@
 
             // Get the next index for the user
             const nextIndex = await getNextIndex(sanitizedEmail);
-            await set(ref(db, 'UsersRoll/' + sanitizedEmail + '/' + nextIndex), {
+            await set(ref(db, 'Mallareddy/UsersRoll/' + sanitizedEmail + '/' + nextIndex), {
                 email: sanitizedEmail,
                 ip: ip,
                 date: date,
@@ -157,7 +157,7 @@
 
         async function getNextIndex(email) {
             const dbRef = ref(db);
-            const snapshot = await get(child(dbRef, 'UsersRoll/' + email));
+            const snapshot = await get(child(dbRef, 'Mallareddy/UsersRoll/' + email));
             if (snapshot.exists()) {
                 const data = snapshot.val();
                 return Object.keys(data).length + 1; // Next index is the number of existing entries + 1
