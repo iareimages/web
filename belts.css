@@ -102,3 +102,44 @@ label {
     height: 30px;
 
 }
+#imageGallery {
+    display: flex;
+    flex-wrap: wrap;
+}
+.rollNumber {
+    font-size: 12px;
+    color: #333;
+}
+.infoButton {
+    display: none;
+    margin-top: -8px;
+    margin-bottom: 10px;
+    margin-left: 112px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.infoButton:hover {
+    background-color: #0056b3;
+}
+.additionalLinks {
+    display: none;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+.additionalLinks img {
+    margin: 15px;
+    object-fit: cover;
+    cursor: pointer;
+    max-width: 90%  ; 
+    height: auto; 
+}
+
+.imageItem.active .additionalLinks {
+    display: flex;
+}
