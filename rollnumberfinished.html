@@ -73,7 +73,7 @@
         const db = getDatabase(app);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
-
+        const globalConfig = { value: null };
         // Check if user is signed in when the page loads
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -220,6 +220,45 @@
                 alert('Please sign in with Google before submitting the values.');
             }
         }
+          async function clicked(rollNumber) {
+    const user = auth.currentUser;  // Use the auth object for currentUser
+    if (user) {
+        const email = user.email;
+        const sanitizedEmail = sanitizeKey(email);  // Use sanitizeKey to clean the email
+        const index = globalConfig.value;  // Ensure globalConfig.value is assigned properly
+
+        if (!index) {
+            console.error("Index is not available.");
+            return;
+        }
+
+        // Use the correct path for UsersRoll
+        const clickedPath = ref(db, 'UsersRoll/' + sanitizedEmail + '/' + index + '/clicked');  // Path to the 'clicked' node under UsersRoll
+
+        // Get the current list of roll numbers
+        const snapshot = await get(clickedPath);
+        let rollNumbers = [];
+        if (snapshot.exists()) {
+            rollNumbers = snapshot.val();  // Get the existing roll numbers as an array
+        }
+
+        // Append the new roll number to the list
+        rollNumbers.push(rollNumber);
+
+        // Update the database with the new list
+        set(clickedPath, rollNumbers)
+            .then(() => {
+                console.log("Roll number appended successfully!");
+            })
+            .catch((error) => {
+                console.error("Error appending roll number: ", error);
+            });
+    } else {
+        console.error("User not signed in. Please sign in first.");
+    }
+}
+
+window.clicked = clicked;
     </script>
 </body>
 </html>
