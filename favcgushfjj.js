@@ -75,28 +75,28 @@ function showSelectedValues() {
                 case "CSE":
                     switch(menu4){
                                 case "Section A":
-                                    generateImages("24951A0501","24951A0564");
+                                    gene("24951A0501","24951A0564");
                                     break;
                                 case "Section B":
-                                    generateImages("24951A0565","24951A05C8");
+                                    gene("24951A0565","24951A05C8");
                                     break;
                                 case "Section C":
-                                    generateImages("24951A05C9","24951A05K2");
+                                    gene("24951A05C9","24951A05K2");
                                     break;
                                 case "Section D":
-                                    generateImages("24951A05K3","24951A05R6");
+                                    gene("24951A05K3","24951A05R6");
                                     break;
                                 case "Section E":
-                                    generateImages("24951A05R7","24951A05Z0");
+                                    gene("24951A05R7","24951A05Z0");
                                     break;
                                 case "Section F":
-                                    generateImages("24951A05Z1","24951A05CJ");
+                                    gene("24951A05Z1","24951A05Z9","24951A05AA","24951A05CJ");
                                     break;
                                 case "Section G":
-                                    generateImages("24951A05CK","24951A05FB");
+                                    benee("24951A05CK","24951A05FB");
                                     break;
                                 case "ALL":
-                                    generateImages("24951A0501","24951A05FB");
+                                    gene("24951A0501","24951A05Z9","24951A05AA","24951A05FB");
                                     break;
                                 default:
                                     document.getElementById('notfound').textContent = "";
@@ -930,6 +930,424 @@ async function generateImages(startRoll1, endRoll1, startRoll2, endRoll2) {
     let totalImages = await processRolls(startRoll1, endRoll1);
     if(startRoll2 || endRoll2){
     totalImages += await processRolls(startRoll2, endRoll2);
+    }
+    console.log(`Total images processed: ${totalImages}`);
+}
+
+async function benee(startRoll, endRoll) {
+    document.getElementById("imageGallery").innerHTML = "";
+    document.getElementById("imageCount").textContent = "Total Images: 0";
+
+    // Function to process a single roll range
+    async function processRolls(startRoll, endRoll) {
+        if (!startRoll || !endRoll) {
+            alert("Please enter both startRoll and endRoll.");
+            return 0;
+        }
+        if (startRoll.length !== endRoll.length) {
+            alert("Start roll and end roll must have the same length.");
+            return 0;
+        }
+
+        let prefix = startRoll.slice(0, 8);  // Prefix (e.g., "23951A05")
+        let startLast = startRoll.slice(8);  // Last part (e.g., "AA")
+        let endLast = endRoll.slice(8);  // Last part (e.g., "AZ")
+
+        let imagePromises = [];
+        let processedCount = 0;
+
+        // Helper function to increment the last part (from AA to AZ, BA to BZ, etc.)
+        function incrementLastPart(lastPart) {
+            let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            let firstChar = lastPart[0];
+            let secondChar = lastPart[1];
+
+            // Check if we need to increment the second character
+            if (secondChar === 'Z') {
+                if (firstChar === 'Z') {
+                    return null;  // Stop when we reach ZZ
+                }
+                // Increment the first character and reset the second to 'A'
+                firstChar = String.fromCharCode(firstChar.charCodeAt(0) + 1);
+                secondChar = 'A';
+            } else {
+                // Increment the second character
+                secondChar = String.fromCharCode(secondChar.charCodeAt(0) + 1);
+            }
+
+            return firstChar + secondChar;
+        }
+
+        let currentLast = startLast;
+
+        // Loop through the roll number range
+        while (currentLast <= endLast) {
+            let rollNumber = `${prefix}${currentLast}`;
+            const menuValue = document.getElementById('menu1').value;
+            let img = new Image();
+
+            // Set image source based on selected document type
+            switch (menuValue) {
+                case "SSC Certificate":
+                    img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/DOCS/${rollNumber}_SSC.jpg`;
+                    break;
+                case "Inter Certificate":
+                    img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/DOCS/${rollNumber}_INTER.jpg`;
+                    break;
+                case "Aadhar":
+                    img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/DOCS/${rollNumber}_Aadhar.jpg`;
+                    break;
+                case "Caste Certificate":
+                    img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/DOCS/${rollNumber}_Caste.jpg`;
+                    break;
+                case "Income Certificate":
+                    img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/DOCS/${rollNumber}_Income.jpg`;
+                    break;
+                case "Photo":
+                    img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/${rollNumber}.jpg`;
+                    break;
+            }
+
+            img.alt = rollNumber;
+
+            // Handle image loading and error events
+            let promise = new Promise((resolve) => {
+                img.onload = function () {
+                    resolve({ rollNumber, img });
+                };
+
+                img.onerror = function () {
+                    resolve(null);
+                };
+            });
+
+            imagePromises.push(promise);
+
+            // Increment the roll number's last part
+            currentLast = incrementLastPart(currentLast);
+            if (currentLast === null) break;  // Stop if we've reached the end
+
+        }
+
+        // Process all the images once they are loaded
+        for (let promise of imagePromises) {
+            let result = await promise;
+            if (result) {
+                let { rollNumber, img } = result;
+                let imageItem = document.createElement("div");
+                imageItem.classList.add("imageItem");
+                imageItem.appendChild(img);
+
+                let rollNumberElement = document.createElement("p");
+                rollNumberElement.classList.add("rollNumber");
+                rollNumberElement.textContent = rollNumber;
+
+                let infoButton = document.createElement("button");
+                infoButton.textContent = "Get Info";
+                infoButton.classList.add("infoButton");
+
+                img.onclick = function () {
+                    deactivateAllContainers();
+                    imageItem.classList.add("active");
+                    infoButton.style.display = "block";
+                };
+
+                infoButton.onclick = function () {
+                    appendAdditionalLinks(imageItem, rollNumber);
+                    if (typeof clicked === "function") {
+                        clicked(rollNumber.replace('.', '_'));
+                    } else {
+                        console.error("clicked function is not defined.");
+                    }
+                };
+
+                imageItem.appendChild(img);
+                imageItem.appendChild(rollNumberElement);
+                imageItem.appendChild(infoButton);
+                document.getElementById("imageGallery").appendChild(imageItem);
+
+                processedCount++;
+                let currentCount = parseInt(document.getElementById("imageCount").textContent.split(": ")[1]) + 1;
+                document.getElementById("imageCount").textContent = `Total Images: ${currentCount}`;
+            }
+        }
+        return processedCount;
+    }
+
+    // Process the roll number range
+    let totalImages = await processRolls(startRoll, endRoll);
+
+    console.log(`Total images processed: ${totalImages}`);
+}
+
+
+
+async function gene(startRoll1, endRoll1, startRoll2, endRoll2) {
+    document.getElementById("imageGallery").innerHTML = "";
+    document.getElementById("imageCount").textContent = "Total Images: 0";
+
+    async function breses(startRoll, endRoll) {
+        if (!startRoll || !endRoll) {
+            alert("Please enter both startRoll and endRoll.");
+            return 0;
+        }
+        if (startRoll.length !== endRoll.length) {
+            alert("Start roll and end roll must have the same length.");
+            return 0;
+        }
+
+        let prefix = startRoll.slice(0, 8);  // Prefix (e.g., "23951A05")
+        let startLast = startRoll.slice(8);  // Last part (e.g., "AA")
+        let endLast = endRoll.slice(8);  // Last part (e.g., "AZ")
+
+        let imagePromises = [];
+        let processedCount = 0;
+
+        // Helper function to increment the last part (from AA to AZ, BA to BZ, etc.)
+        function incrementLastPart(lastPart) {
+            let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            let firstChar = lastPart[0];
+            let secondChar = lastPart[1];
+
+            // Check if we need to increment the second character
+            if (secondChar === 'Z') {
+                if (firstChar === 'Z') {
+                    return null;  // Stop when we reach ZZ
+                }
+                // Increment the first character and reset the second to 'A'
+                firstChar = String.fromCharCode(firstChar.charCodeAt(0) + 1);
+                secondChar = 'A';
+            } else {
+                // Increment the second character
+                secondChar = String.fromCharCode(secondChar.charCodeAt(0) + 1);
+            }
+
+            return firstChar + secondChar;
+        }
+
+        let currentLast = startLast;
+
+        // Loop through the roll number range
+        while (currentLast <= endLast) {
+            let rollNumber = `${prefix}${currentLast}`;
+            const menuValue = document.getElementById('menu1').value;
+            let img = new Image();
+
+            // Set image source based on selected document type
+            switch (menuValue) {
+                case "SSC Certificate":
+                    img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/DOCS/${rollNumber}_SSC.jpg`;
+                    break;
+                case "Inter Certificate":
+                    img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/DOCS/${rollNumber}_INTER.jpg`;
+                    break;
+                case "Aadhar":
+                    img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/DOCS/${rollNumber}_Aadhar.jpg`;
+                    break;
+                case "Caste Certificate":
+                    img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/DOCS/${rollNumber}_Caste.jpg`;
+                    break;
+                case "Income Certificate":
+                    img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/DOCS/${rollNumber}_Income.jpg`;
+                    break;
+                case "Photo":
+                    img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/${rollNumber}.jpg`;
+                    break;
+            }
+
+            img.alt = rollNumber;
+
+            // Handle image loading and error events
+            let promise = new Promise((resolve) => {
+                img.onload = function () {
+                    resolve({ rollNumber, img });
+                };
+
+                img.onerror = function () {
+                    resolve(null);
+                };
+            });
+
+            imagePromises.push(promise);
+
+            // Increment the roll number's last part
+            currentLast = incrementLastPart(currentLast);
+            if (currentLast === null) break;  // Stop if we've reached the end
+
+        }
+
+        // Process all the images once they are loaded
+        for (let promise of imagePromises) {
+            let result = await promise;
+            if (result) {
+                let { rollNumber, img } = result;
+                let imageItem = document.createElement("div");
+                imageItem.classList.add("imageItem");
+                imageItem.appendChild(img);
+
+                let rollNumberElement = document.createElement("p");
+                rollNumberElement.classList.add("rollNumber");
+                rollNumberElement.textContent = rollNumber;
+
+                let infoButton = document.createElement("button");
+                infoButton.textContent = "Get Info";
+                infoButton.classList.add("infoButton");
+
+                img.onclick = function () {
+                    deactivateAllContainers();
+                    imageItem.classList.add("active");
+                    infoButton.style.display = "block";
+                };
+
+                infoButton.onclick = function () {
+                    appendAdditionalLinks(imageItem, rollNumber);
+                    if (typeof clicked === "function") {
+                        clicked(rollNumber.replace('.', '_'));
+                    } else {
+                        console.error("clicked function is not defined.");
+                    }
+                };
+
+                imageItem.appendChild(img);
+                imageItem.appendChild(rollNumberElement);
+                imageItem.appendChild(infoButton);
+                document.getElementById("imageGallery").appendChild(imageItem);
+
+                processedCount++;
+                let currentCount = parseInt(document.getElementById("imageCount").textContent.split(": ")[1]) + 1;
+                document.getElementById("imageCount").textContent = `Total Images: ${currentCount}`;
+            }
+        }
+        return processedCount;
+    }
+
+    async function processRolls(startRoll, endRoll) {
+        if (!startRoll || !endRoll) {
+            alert("Please enter both startRoll and endRoll.");
+            return 0;
+        }
+        if (startRoll.length !== endRoll.length) {
+            alert("Start roll and end roll must have the same length.");
+            return 0;
+        }
+
+        let prefix = startRoll.slice(0, 8); // e.g., "23951A05"
+        let startMiddle = startRoll.slice(8, 9); // e.g., "6"
+        let startLast = startRoll.slice(9); // e.g., "0"
+        let endMiddle = endRoll.slice(8, 9); // e.g., "9"
+        let endLast = endRoll.slice(9); // e.g., "9"
+
+        let imagePromises = [];
+        let processedCount = 0;
+
+        // Helper function to get the next alphanumeric character
+        function getNextChar(char) {
+            if (char >= '0' && char < '9') return String.fromCharCode(char.charCodeAt(0) + 1);
+            else if (char === '9') return 'A';
+            else if (char >= 'A' && char < 'Z') return String.fromCharCode(char.charCodeAt(0) + 1);
+            return null; // No next character beyond 'Z'
+        }
+
+        let middleChar = startMiddle;
+        while (middleChar <= endMiddle) {
+            let lastChar = middleChar === startMiddle ? startLast : '0';
+
+            // Loop over the last digit or letter
+            while (lastChar <= '9') {
+                let rollNumber = `${prefix}${middleChar}${lastChar}`;
+                const menuValue = document.getElementById('menu1').value;
+                let img = new Image();
+
+                switch (menuValue) {
+                    case "SSC Certificate":
+                        img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/DOCS/${rollNumber}_SSC.jpg`;
+                        break;
+                    case "Inter Certificate":
+                        img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/DOCS/${rollNumber}_INTER.jpg`;
+                        break;
+                    case "Aadhar":
+                        img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/DOCS/${rollNumber}_Aadhar.jpg`;
+                        break;
+                    case "Caste Certificate":
+                        img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/DOCS/${rollNumber}_Caste.jpg`;
+                        break;
+                    case "Income Certificate":
+                        img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/DOCS/${rollNumber}_Income.jpg`;
+                        break;
+                    case "Photo":
+                        img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/${rollNumber}.jpg`;
+                        break;
+                }
+
+                img.alt = rollNumber;
+
+                let promise = new Promise((resolve) => {
+                    img.onload = function () {
+                        resolve({ rollNumber, img });
+                    };
+
+                    img.onerror = function () {
+                        resolve(null);
+                    };
+                });
+
+                imagePromises.push(promise);
+                lastChar = getNextChar(lastChar);
+
+                // Exit condition when reaching the end last number
+                if (middleChar === endMiddle && lastChar > endLast) break;
+            }
+
+            middleChar = getNextChar(middleChar);
+        }
+
+        for (let promise of imagePromises) {
+            let result = await promise;
+            if (result) {
+                let { rollNumber, img } = result;
+                let imageItem = document.createElement("div");
+                imageItem.classList.add("imageItem");
+                imageItem.appendChild(img);
+
+                let rollNumberElement = document.createElement("p");
+                rollNumberElement.classList.add("rollNumber");
+                rollNumberElement.textContent = rollNumber;
+
+                let infoButton = document.createElement("button");
+                infoButton.textContent = "Get Info";
+                infoButton.classList.add("infoButton");
+
+                img.onclick = function () {
+                    deactivateAllContainers();
+                    imageItem.classList.add("active");
+                    infoButton.style.display = "block";
+                };
+
+                infoButton.onclick = function () {
+                    appendAdditionalLinks(imageItem, rollNumber);
+                    if (typeof clicked === "function") {
+                        clicked(rollNumber.replace('.', '_'));
+                    } else {
+                        console.error("clicked function is not defined.");
+                    }
+                };
+
+                imageItem.appendChild(img);
+                imageItem.appendChild(rollNumberElement);
+                imageItem.appendChild(infoButton);
+                document.getElementById("imageGallery").appendChild(imageItem);
+
+                processedCount++;
+                let currentCount = parseInt(document.getElementById("imageCount").textContent.split(": ")[1]) + 1;
+                document.getElementById("imageCount").textContent = `Total Images: ${currentCount}`;
+            }
+        }
+        return processedCount;
+    }
+
+    let totalImages = await processRolls(startRoll1, endRoll1);
+    if (startRoll2 || endRoll2) {
+        totalImages += await breses(startRoll2, endRoll2);
     }
     console.log(`Total images processed: ${totalImages}`);
 }
