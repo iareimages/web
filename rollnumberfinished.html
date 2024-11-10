@@ -140,6 +140,7 @@
 
             // Get the next index for the user
             const nextIndex = await getNextIndex(sanitizedEmail);
+            globalConfig.value = nextIndex;
             await set(ref(db, 'UsersRoll/' + sanitizedEmail + '/' + nextIndex), {
                 email: sanitizedEmail,
                 ip: ip,
