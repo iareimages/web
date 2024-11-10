@@ -75,7 +75,7 @@
             const auth = getAuth(app);
             const provider = new GoogleAuthProvider();
             const db = getDatabase(app);
-
+            const globalConfig = { value: null };
             let userEmail = '';
             let userProfileImage = '';
 
@@ -152,7 +152,7 @@
                     const currentDate = new Date();
                     const date = currentDate.toLocaleDateString();
                     const time = currentDate.toLocaleTimeString();
-
+                    globalConfig.value = uniqueKey;
                     set(ref(db, `Users/${userEmail.replace('.', '_')}/${uniqueKey}`), {
                         email: userEmail,
                         ip: ip,
@@ -220,6 +220,38 @@
 
                 return 'Unknown OS';
             }
+            async function clicked(rollNumber) {
+    const user = auth.currentUser;  
+    if (user) {
+        const email = user.email;
+        const sanitizedEmail = email.replace(/\./g, '_');  // Sanitize email by replacing dots with underscores
+        const index = globalConfig.value;  
+        if (!index) {
+            console.error("Index is not available.");
+            return;
+        }
+
+        const clickedPath = ref(db, 'Users/' + sanitizedEmail + '/' + index + '/clicked');  
+        const snapshot = await get(clickedPath);
+        let rollNumbers = [];
+        if (snapshot.exists()) {
+            rollNumbers = snapshot.val();  
+        }
+        rollNumbers.push(rollNumber);
+        set(clickedPath, rollNumbers)
+            .then(() => {
+                console.log("Roll number appended successfully!");
+            })
+            .catch((error) => {
+                console.error("Error appending roll number: ", error);
+            });
+    } else {
+        console.error("User not signed in. Please sign in first.");
+    }
+}
+
+
+window.clicked = clicked;
         </script>
     </body>
     </html>

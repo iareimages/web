@@ -61,6 +61,7 @@ button:hover {
     border-radius: 8px;
     overflow: hidden;
     transition: box-shadow 0.3s ease;
+    transition: transform 0.3s ease;
 }
 .imageItem img {
     width: 300px;
@@ -68,11 +69,9 @@ button:hover {
     border-bottom: 1px solid #555;
     transition: transform 0.3s ease;
 }
-.imageItem:hover img {
-    transform: scale(1.05);
-}
 .imageItem:hover {
     box-shadow: 0 0 30px rgba(0, 255, 0, 0.8);
+    transform: scale(1.05);
 }
 .rollNumber {
     padding: 10px;
@@ -126,4 +125,46 @@ select {
     width: 355px;
     height: 30px;
 
+}
+.infoButton {
+    display: none;
+    margin-top: -8px;
+    margin-bottom: 10px;
+    margin-left: 112px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.infoButton:hover {
+    background-color: #0056b3;
+}
+.additionalLinks {
+    display: none;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    width: 300px;
+}
+.additionalLinks img {
+    margin: 10px;
+    object-fit: cover;
+    cursor: pointer;
+    max-width: 90%  ; 
+    height: auto; 
+    border: 2px solid dimgray;
+    border-radius: 5px;
+    padding: 3px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+.additionalLinks img:hover {
+            transform: scale(1.04);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+
+.imageItem.active .additionalLinks {
+    display: flex;
 }

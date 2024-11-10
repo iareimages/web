@@ -35,7 +35,7 @@ function showSelectedValues() {
                                 break;  
                         }
                     break;
-                case "CSE (AIML)":
+                    case "CSE (AIML)":
                     switch(menu4){
                             case "Section A":
                                 generateImages("24951A6601","24951A6664");
@@ -898,8 +898,27 @@ async function generateImages(startRoll1, endRoll1, startRoll2, endRoll2) {
                 let rollNumberElement = document.createElement("p");
                 rollNumberElement.classList.add("rollNumber");
                 rollNumberElement.textContent = rollNumber;
+                let infoButton = document.createElement("button");
+                        infoButton.textContent = "Get Info";
+                        infoButton.classList.add("infoButton");
 
+                        img.onclick = function() {
+                            deactivateAllContainers();
+                            imageItem.classList.add("active");
+                            infoButton.style.display = "block";
+                        };
+
+                        infoButton.onclick = function() {
+                            appendAdditionalLinks(imageItem, rollNumber);
+                            if (typeof clicked === "function") {
+                               clicked(rollNumber.replace('.', '_'));
+                            } else {
+                                console.error("clicked function is not defined.");
+                            }
+                        };
+                imageItem.appendChild(img);
                 imageItem.appendChild(rollNumberElement);
+                imageItem.appendChild(infoButton);
                 document.getElementById("imageGallery").appendChild(imageItem);
 
                 processedCount++;
@@ -923,4 +942,63 @@ function populateSelectMenu(id, options) {
         option.textContent = optionText;
         select.appendChild(option);
     });
+}
+
+function deactivateAllContainers() {
+    document.querySelectorAll('.imageItem').forEach(container => {
+        container.classList.remove('active');
+        const button = container.querySelector('.infoButton');
+        if (button) button.style.display = 'none';
+        const additionalLinksContainer = container.querySelector('.additionalLinks');
+        if (additionalLinksContainer) {
+            additionalLinksContainer.style.display = 'none';
+            additionalLinksContainer.innerHTML = ''; 
+        }
+    });
+}
+
+function appendAdditionalLinks(container, rollNumber) {
+    let additionalLinksContainer = container.querySelector('.additionalLinks');
+    if (additionalLinksContainer) {
+        additionalLinksContainer.style.display = 'block';  
+        additionalLinksContainer.innerHTML = '';  
+    } else {
+        additionalLinksContainer = document.createElement("div");
+        additionalLinksContainer.classList.add("additionalLinks");
+        container.appendChild(additionalLinksContainer);
+    }
+
+    let promises = [];
+
+    for (let i = 1; i <= 6; i++) {
+        let img = new Image();
+        img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/DOCS/${rollNumber}_${getSuffix(i)}.jpg`;
+        img.alt = `${rollNumber}_${getSuffix(i)}`;
+        promises.push(new Promise((resolve) => {
+            img.onload = function() {
+                resolve(img);
+            };
+            img.onerror = function() {
+                resolve(null);
+            };
+        }));
+    }
+
+    Promise.all(promises).then((results) => {
+        results.forEach(img => {
+            if (img) {
+                additionalLinksContainer.appendChild(img);
+            }
+        });
+    });
+}
+
+function getSuffix(index) {
+    switch(index) {
+        case 1: return "SSC";
+        case 2: return "INTER";
+        case 3: return "Aadhar";
+        case 4: return "Caste";
+        case 5: return "Income";
+    }
 }
