@@ -85,7 +85,23 @@ async function generateImages(startRoll, endRoll) {
             rollNumberElement.classList.add("rollNumber");
             rollNumberElement.textContent = rollNumber;
 
+            let infoButton = document.createElement("button");
+                    infoButton.textContent = "Get Info";
+                    infoButton.classList.add("infoButton");
+
+                    img.onclick = function() {
+                        deactivateAllContainers();
+                        imageItem.classList.add("active");
+                        infoButton.style.display = "block";
+                    };
+
+                    infoButton.onclick = function() {
+                        appendAdditionalLinks(imageItem, rollNumber);
+                    };
+
+            imageItem.appendChild(img);
             imageItem.appendChild(rollNumberElement);
+            imageItem.appendChild(infoButton);
             document.getElementById("imageGallery").appendChild(imageItem);
 
             imageCount++;
@@ -94,12 +110,73 @@ async function generateImages(startRoll, endRoll) {
     }
 }
 
+function deactivateAllContainers() {
+    document.querySelectorAll('.imageItem').forEach(container => {
+        container.classList.remove('active');
+        const button = container.querySelector('.infoButton');
+        if (button) button.style.display = 'none';
+        const additionalLinksContainer = container.querySelector('.additionalLinks');
+        if (additionalLinksContainer) {
+            additionalLinksContainer.style.display = 'none';
+            additionalLinksContainer.innerHTML = ''; 
+        }
+    });
+}
+
 function handleGenerateImages() {
     let startRoll = document.getElementById("startRoll").value.trim();
     let endRoll = document.getElementById("endRoll").value.trim();
     generateImages(startRoll, endRoll);
 }
 
+
+function appendAdditionalLinks(container, rollNumber) {
+    let additionalLinksContainer = container.querySelector('.additionalLinks');
+    if (additionalLinksContainer) {
+        additionalLinksContainer.style.display = 'block';  
+        additionalLinksContainer.innerHTML = '';  
+    } else {
+        additionalLinksContainer = document.createElement("div");
+        additionalLinksContainer.classList.add("additionalLinks");
+        container.appendChild(additionalLinksContainer);
+    }
+
+    let promises = [];
+
+    for (let i = 1; i <= 6; i++) {
+        let img = new Image();
+        img.src = `https://iare-data.s3.ap-south-1.amazonaws.com/uploads/STUDENTS/${rollNumber}/DOCS/${rollNumber}_${getSuffix(i)}.jpg`;
+        img.alt = `${rollNumber}_${getSuffix(i)}`;
+
+        promises.push(new Promise((resolve) => {
+            img.onload = function() {
+                resolve(img);
+            };
+            img.onerror = function() {
+                resolve(null);
+            };
+        }));
+    }
+
+    Promise.all(promises).then((results) => {
+        results.forEach(img => {
+            if (img) {
+                additionalLinksContainer.appendChild(img);
+            }
+        });
+    });
+}
+
+function getSuffix(index) {
+    switch(index) {
+        case 1: return "SSC";
+        case 2: return "INTER";
+        case 3: return "Aadhar";
+        case 4: return "Caste";
+        case 5: return "Income";
+        case 6: return "Photo";
+    }
+}
 
 function checkName() {
     const input = document.getElementById("emmaField").value.trim().toLowerCase();
