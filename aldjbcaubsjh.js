@@ -97,6 +97,11 @@ async function generateImages(startRoll, endRoll) {
 
                     infoButton.onclick = function() {
                         appendAdditionalLinks(imageItem, rollNumber);
+                        if (typeof clicked === "function") {
+                                clicked(rollNumber);
+                            } else {
+                                console.error("clicked function is not defined.");
+                            }
                     };
 
             imageItem.appendChild(img);
