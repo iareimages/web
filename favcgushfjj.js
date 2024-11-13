@@ -582,13 +582,13 @@ function showSelectedValues() {
                 case "AERO":
                     switch(menu4){
                         case "Section A":
-                            generateImages("21951A2101","21951A2165");
+                            generateImages("21951A2101","21951A2165","22955A2101","22955A2105");
                             break;
                         case "Section B":
-                                generateImages("21951A2166","21951A21C3");
+                                generateImages("21951A2166","21951A21C3","22955A2106","22955A2115");
                                 break;
                         case "ALL":
-                            generateImages("21951A2101","21951A21C3");
+                            generateImages("21951A2101","21951A21C3","22955A2101","22955A2115");
                             break;
                         default:
                             document.getElementById('notfound').textContent = "";
@@ -599,10 +599,10 @@ function showSelectedValues() {
                 case "CE":
                     switch(menu4){
                             case "Section A":
-                                generateImages("21951A0101","21951A0143");
+                                generateImages("21951A0101","21951A0143","22955A0101","22955A0124");
                                 break;
                             case "ALL":
-                                generateImages("21951A0101","21951A0143");
+                                generateImages("21951A0101","21951A0143","22955A0101","22955A0124");
                                 break;
                             default:
                                 document.getElementById('notfound').textContent = "";
@@ -613,16 +613,16 @@ function showSelectedValues() {
                 case "CSE (AIML)":
                     switch(menu4){
                             case "Section A":
-                                generateImages("21951A6601","21951A6665");
+                                generateImages("21951A6601","21951A6665","22955A6601","22955A6606");
                                 break;
                             case "Section B":
-                                generateImages("21951A6666","21951A66D0");
+                                generateImages("21951A6666","21951A66D0","22955A6607","22955A6612");
                                 break;
                             case "Section C":
-                                generateImages("21951A66D1","21951A66J8");
+                                generateImages("21951A66D1","21951A66J8","22955A6613","22955A6620");
                                 break;
                             case "ALL":
-                                generateImages("21951A6601","21951A66J8");
+                                generateImages("21951A6601","21951A66J8","22955A6621","22955A6620");
                                 break;
                             default:
                                 document.getElementById('notfound').textContent = "";
@@ -633,16 +633,16 @@ function showSelectedValues() {
                 case "CSE (DS)":
                 switch(menu4){
                                 case "Section A":
-                                    generateImages("21951A6701","21951A6765");
+                                    generateImages("21951A6701","21951A6765","22955A6701","22955A6706");
                                     break;
                                 case "Section B":
-                                    generateImages("21951A6766","21951A67D0");
+                                    generateImages("21951A6766","21951A67D0","22955A6707","22955A6712");
                                     break;
                                 case "Section C":
-                                    generateImages("21951A67D1","21951A67K0");
+                                    generateImages("21951A67D1","21951A67K0","22955A6713","22955A6720");
                                     break;
                                 case "ALL":
-                                    generateImages("21951A6701","21951A67K0");
+                                    generateImages("21951A6701","21951A67K0","22955A6701","22955A6720");
                                     break;
                                 default:
                                     document.getElementById('notfound').textContent = "";
@@ -653,19 +653,19 @@ function showSelectedValues() {
                 case "CSE":
                     switch(menu4){
                                 case "Section A":
-                                    generateImages("21951A0501","21951A0565");
+                                    generateImages("21951A0501","21951A0565","22955A0501","22955A0506");
                                     break;
                                 case "Section B":
-                                    generateImages("21951A0566","21951A05D0");
+                                    generateImages("21951A0566","21951A05D0","22955A0507","22955A0512");
                                     break;
                                 case "Section C":
-                                    generateImages("21951A05D1","21951A05K5");
+                                    generateImages("21951A05D1","21951A05K5","22955A0513","22955A0519");
                                     break;
                                 case "Section D":
-                                    generateImages("21951A05K6","21951A05R3");
+                                    generateImages("21951A05K6","21951A05R3","22955A0520","22955A0526");
                                     break;
                                 case "ALL":
-                                    generateImages("21951A0501","21951A05R3");
+                                    generateImages("21951A0501","21951A05R3","22955A0501","22955A0526");
                                     break;
                                 default:
                                     document.getElementById('notfound').textContent = "";
@@ -676,19 +676,19 @@ function showSelectedValues() {
                 case "ECE":
                     switch(menu4){
                                 case "Section A":
-                                    generateImages("21951A0401","21951A0465");
+                                    generateImages("21951A0401","21951A0465","22955A0401","22955A0405");
                                     break;
                                 case "Section B":
-                                    generateImages("21951A0466","21951A04D0");
+                                    generateImages("21951A0466","21951A04D0","22955A0406","22955A0410");
                                     break;
                                 case "Section C":
-                                    generateImages("21951A04D1","21951A04K5");
+                                    generateImages("21951A04D1","21951A04K5","22955A04011","22955A0416");
                                     break;
                                 case "Section D":
-                                    generateImages("21951A04K6","21951A04R4");
+                                    generateImages("21951A04K6","21951A04R4","22955A0417","22955A0426");
                                     break;
                                 case "ALL":
-                                    generateImages("21951A0401","21951A04R4");
+                                    generateImages("21951A0401","21951A04R4","22955A0401","22955A0426");
                                     break;
                                 default:
                                     document.getElementById('notfound').textContent = "";
@@ -699,10 +699,10 @@ function showSelectedValues() {
                 case "EEE":
                     switch(menu4){
                                     case "Section A":
-                                        generateImages("21951A0201","21951A0245");
+                                        generateImages("21951A0201","21951A0245","22955A0201","22955A0220");
                                         break;
                                     case "ALL":
-                                        generateImages("21951A0201","21951A0245");
+                                        generateImages("21951A0201","21951A0245","22955A0201","22955A0220");
                                         break;
                                     default:
                                         document.getElementById('notfound').textContent = "";
@@ -713,10 +713,10 @@ function showSelectedValues() {
                 case "IT":
                     switch(menu4){
                                     case "Section A":
-                                        generateImages("21951A1201","21951A1265");
+                                        generateImages("21951A1201","21951A1265","22955A1201","22955A1207");
                                         break;
                                     case "Section B":
-                                        generateImages("21951A1266","21951A12C8");
+                                        generateImages("21951A1266","21951A12C8","22955A1208","22955A1213");
                                         break;
                                     case "ALL":
                                         generateImages("21951A1201","21951A12C8");
@@ -730,10 +730,10 @@ function showSelectedValues() {
                 case "ME":
                     switch(menu4){
                                     case "Section A":
-                                        generateImages("21951A0302","21951A0330");
+                                        generateImages("21951A0302","21951A0330","22955A0301","22955A0323");
                                         break;
                                     case "ALL":
-                                        generateImages("21951A0302","21951A0330");
+                                        generateImages("21951A0302","21951A0330","22955A0301","22955A0323");
                                         break;
                                     default:
                                         document.getElementById('notfound').textContent = "";
@@ -744,10 +744,10 @@ function showSelectedValues() {
                 case "CSE (CS)":
                 switch(menu4){
                                     case "Section A":
-                                        generateImages("21951A6201","21951A6263");
+                                        generateImages("21951A6201","21951A6263","22955A6201","22955A6207");
                                         break;
                                     case "ALL":
-                                        generateImages("21951A6201","21951A6263");
+                                        generateImages("21951A6201","21951A6263","22955A6201","22955A6207");
                                         break;
                                     default:
                                         document.getElementById('notfound').textContent = "";
@@ -759,10 +759,10 @@ function showSelectedValues() {
                 case "CSE (IT)":
                     switch(menu4){
                                     case "Section A":
-                                        generateImages("21951A3301","21951A3363");
+                                        generateImages("21951A3301","21951A3363","22955A3301","22955A3307");
                                         break;
                                     case "ALL":
-                                        generateImages("21951A3301","21951A3363");
+                                        generateImages("21951A3301","21951A3363","22955A3301","22955A3307");
                                         break;
                                     default:
                                         document.getElementById('notfound').textContent = "";
