@@ -189,16 +189,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
                     handleGenerateImages();
                     displayUserInfo(email);
                 } else {  
-                    document.body.innerHTML = "";
-                    const johnSection = document.getElementById("johnSection");
-                    johnSection.style.display = "block";
-                    johnSection.innerHTML = `
-                        <h1>Sign in with Google</h1>
+                    document.body.innerHTML = `<h1>Sign in with Google</h1>
                         <center>
                             <div class="ddess" id="johnSection">
                                 <h3>Sorry.... <br><br>You no Longer have access. Please contact the administrator <strong></strong></h3>
                             </div>
-                        </center>`;
+                        </center>`;`;
+                        
                 }
             } else {
                 alert('Please sign in with Google before submitting the values.');
