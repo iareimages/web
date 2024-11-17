@@ -188,11 +188,13 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
                 if (hasAccess) {
                     handleGenerateImages();
                     displayUserInfo(email);
-                } else {
+                } else {  
+                    document.body.innerHTML = "";
                     document.getElementById("jamesDisplay").textContent = "";
                     document.getElementById("profilePicture").style.display = "none";
                     document.getElementById("aliceMessage").classList.add("hidden");
                     document.getElementById("hide").style.display = "none";
+                
                     const johnSection = document.getElementById("johnSection");
                     johnSection.style.display = "block";
                     johnSection.innerHTML = `
