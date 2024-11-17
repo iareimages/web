@@ -194,7 +194,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
                             <div class="ddess" id="johnSection">
                                 <h3>Sorry.... <br><br>You no Longer have access. Please contact the administrator <strong></strong></h3>
                             </div>
-                        </center>`;`;
+                        </center>`;
                         
                 }
             } else {
