@@ -4,7 +4,9 @@ function updateSelectedValue() {
 }
 
 async function generateImages(startRoll, endRoll) {
+    document.getElementById("loa").style.display = "flex";
     document.getElementById("imageGallery").innerHTML = "";
+    document.getElementById("imageGallery").style.display = "none";
     document.getElementById("imageCount").textContent = "Total Images: 0";
 
     if (!startRoll || !endRoll) {
@@ -113,6 +115,8 @@ async function generateImages(startRoll, endRoll) {
             document.getElementById("imageCount").textContent = `Total Images: ${imageCount}`;
         }
     }
+    document.getElementById("imageGallery").style.display = "flex";
+    document.getElementById("loa").style.display = "none";
 }
 
 function deactivateAllContainers() {

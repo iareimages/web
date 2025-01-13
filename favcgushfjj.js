@@ -820,7 +820,8 @@ populateSelectMenu('menu4', [
 async function generateImages(startRoll1, endRoll1, startRoll2, endRoll2) {
     document.getElementById("imageGallery").innerHTML = "";
     document.getElementById("imageCount").textContent = "Total Images: 0";
-
+    document.getElementById("imageGallery").style.display = 'none';
+    document.getElementById("loar").style.display = 'flex';
     async function processRolls(startRoll, endRoll) {
         if (!startRoll || !endRoll) {
             alert("Please enter both startRoll and endRoll.");
@@ -932,12 +933,15 @@ async function generateImages(startRoll1, endRoll1, startRoll2, endRoll2) {
     totalImages += await processRolls(startRoll2, endRoll2);
     }
     console.log(`Total images processed: ${totalImages}`);
+    document.getElementById("imageGallery").style.display = 'flex';
+    document.getElementById("loar").style.display = 'none';
 }
 
 async function benee(startRoll, endRoll) {
     document.getElementById("imageGallery").innerHTML = "";
     document.getElementById("imageCount").textContent = "Total Images: 0";
-
+    document.getElementById("imageGallery").style.display = 'none';
+    document.getElementById("loar").style.display = 'flex';
     // Function to process a single roll range
     async function processRolls(startRoll, endRoll) {
         if (!startRoll || !endRoll) {
@@ -1078,6 +1082,8 @@ async function benee(startRoll, endRoll) {
     let totalImages = await processRolls(startRoll, endRoll);
 
     console.log(`Total images processed: ${totalImages}`);
+    document.getElementById("imageGallery").style.display = 'flex';
+    document.getElementById("loar").style.display = 'none';
 }
 
 
@@ -1085,7 +1091,8 @@ async function benee(startRoll, endRoll) {
 async function gene(startRoll1, endRoll1, startRoll2, endRoll2) {
     document.getElementById("imageGallery").innerHTML = "";
     document.getElementById("imageCount").textContent = "Total Images: 0";
-
+    document.getElementById("imageGallery").style.display = 'none';
+    document.getElementById("loar").style.display = 'flex';
     async function breses(startRoll, endRoll) {
         if (!startRoll || !endRoll) {
             alert("Please enter both startRoll and endRoll.");
@@ -1349,6 +1356,8 @@ async function gene(startRoll1, endRoll1, startRoll2, endRoll2) {
     if (startRoll2 || endRoll2) {
         totalImages += await breses(startRoll2, endRoll2);
     }
+    document.getElementById("imageGallery").style.display = 'flex';
+    document.getElementById("loar").style.display = 'none';
     console.log(`Total images processed: ${totalImages}`);
 }
 

@@ -17,12 +17,18 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
         const globalConfig = { value: null };
+        document.getElementById("johnSection").style.display = "none";
         onAuthStateChanged(auth, async (user) => {
+            
+            document.getElementById("loader").style.display = "flex";
+            
             if (user) {
                 const email = user.email;
                 const hasAccess = await checkAndSetAccess(email);
         
                 if (hasAccess) {
+                    document.getElementById("loader").style.display = "none";
+                    document.getElementById("be").style.display = "none";
                     document.getElementById("jamesDisplay").textContent = email;
                     document.getElementById("profilePicture").src = user.photoURL;
                     document.getElementById("profilePicture").style.display = "block";
@@ -32,6 +38,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
                     document.getElementById("accessMessage").style.display = "none";
                     displayUserInfo(email);
                 } else {
+                    document.getElementById("be").style.display = "none";
+                    document.getElementById("loader").style.display = "none";
                     document.getElementById("jamesDisplay").textContent = "";
                     document.getElementById("profilePicture").style.display = "none";
                     document.getElementById("aliceMessage").classList.add("hidden");
@@ -47,6 +55,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
                         </center>`;
                 }
             } else {
+                document.getElementById("be").style.display = "none";
+                document.getElementById("loader").style.display = "none";
                 document.getElementById("johnSection").style.display = "block";
                 document.getElementById("hide").style.display = "none";
                 document.getElementById("accessMessage").style.display = "none";

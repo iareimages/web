@@ -18,7 +18,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
         const globalConfig = { value: null };
         let userEmail = '';
         let userProfileImage = '';
-
+        
         document.getElementById("googleLoginBtn").addEventListener("click", () => {
             provider.setCustomParameters({
                 prompt: 'select_account'
@@ -32,7 +32,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
                     console.error("Error signing in:", error);
                 });
         });
-
+        document.getElementById("googleLoginBtn").style.display = 'none';
+        document.getElementById("headerContainer").style.display = 'none';
         onAuthStateChanged(auth, (user) => {
     if (user) {
         const sanitizedEmail = user.email.replace('.', '_'); 
@@ -43,14 +44,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
                 if (snapshot.val() === 1) {
                     userEmail = user.email;
                     userProfileImage = user.photoURL;
-
+                    document.getElementById("headerContainer").style.display = 'flex';
                     const welcomeMessage = document.getElementById("welcomeMessage");
                     const exampleHeading = document.getElementById("exampleHeading");
                     const selectContainer = document.getElementById("selectContainer");
                     const googleLogin = document.getElementById("googleLoginBtn");
                     const profileImage = document.getElementById("profileImage");
                     const somemiss = document.getElementById("somemiss");
-
+                    document.getElementById("be").style.display = 'none';
                     somemiss.style.display = 'none';
                     googleLogin.style.display = 'none';
                     welcomeMessage.textContent = `Welcome, ${userEmail}`;
@@ -60,6 +61,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
                     profileImage.src = userProfileImage;
                     profileImage.style.display = 'block';
                 } else {
+                    document.getElementById("headerContainer").style.display = 'flex';
+                    document.getElementById("be").style.display = 'none';
                     document.body.innerHTML = `<div style="text-align: center; font-family: Arial, sans-serif;">
                         <h1 id="exampleHeading">Email Verification</h1>
                         <h3 style="color: white;">Sorry, you no longer have access.... Please contact the Administrator</h3>
@@ -69,14 +72,14 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
                 set(userAccessRef, 1).then(() => {
                     userEmail = user.email;
                     userProfileImage = user.photoURL;
-
+                    document.getElementById("be").style.display = 'none';
                     const welcomeMessage = document.getElementById("welcomeMessage");
                     const exampleHeading = document.getElementById("exampleHeading");
                     const selectContainer = document.getElementById("selectContainer");
                     const googleLogin = document.getElementById("googleLoginBtn");
                     const profileImage = document.getElementById("profileImage");
                     const somemiss = document.getElementById("somemiss");
-
+                    document.getElementById("headerContainer").style.display = 'flex';
                     somemiss.style.display = 'none';
                     googleLogin.style.display = 'none';
                     welcomeMessage.textContent = `Welcome, ${userEmail}`;
@@ -86,6 +89,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
                     profileImage.src = userProfileImage;
                     profileImage.style.display = 'block';
                 }).catch((error) => {
+                    document.getElementById("headerContainer").style.display = 'flex';
+                    document.getElementById("be").style.display = 'none';
                     console.error("Error setting access value:", error);
                     document.body.innerHTML = `<div style="text-align: center; font-family: Arial, sans-serif;">
                         <h1 id="exampleHeading">Email Verification</h1>
@@ -94,6 +99,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
                 });
             }
         }).catch((error) => {
+            document.getElementById("headerContainer").style.display = 'flex';
+            document.getElementById("be").style.display = 'none';
             console.error("Error checking access value:", error);
             document.body.innerHTML = `<div style="text-align: center; font-family: Arial, sans-serif;">
                 <h1 id="exampleHeading">Email Verification</h1>
@@ -101,6 +108,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
             </div>`;
         });
     } else {
+        document.getElementById("be").style.display = 'none';
+        document.getElementById("googleLoginBtn").style.display = 'flex';
+        document.getElementById("headerContainer").style.display = 'flex';
         const googleLogin = document.getElementById("googleLoginBtn");
         googleLogin.style.display = 'block';
         const profileImage = document.getElementById("profileImage");

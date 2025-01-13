@@ -168,3 +168,59 @@ select {
 .imageItem.active .additionalLinks {
     display: flex;
 }
+
+.loader {
+    display: flex;
+    justify-content: space-between;
+    width: 100px;
+    height: 50px;
+  }
+
+  .dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #3498db;
+    animation: bounce 1.5s infinite ease-in-out, colorChange 5s infinite linear;
+  }
+
+  .dot:nth-child(1) {
+    background-color: #2ecc71;
+    animation-delay: 0s, 0s;
+  }
+
+  .dot:nth-child(2) {
+    background-color: #3498db;
+    animation-delay: 0.2s, 0.2s;
+  }
+
+  .dot:nth-child(3) {
+    background-color: #e74c3c;
+    animation-delay: 0.4s, 0.4s;
+  }
+
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+    50% {
+      transform: translateY(-25px);
+      opacity: 0.5;
+    }
+  }
+
+  @keyframes colorChange {
+    0% {
+      background-color: #2ecc71;
+    }
+    33% {
+      background-color: #3498db;
+    }
+    66% {
+      background-color: #e74c3c;
+    }
+    100% {
+      background-color: #2ecc71;
+    }
+  }
