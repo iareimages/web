@@ -97,7 +97,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
                 return accessValue === 1;
             } else {
                 await set(ref(db, `UsersRoll/${sanitizedEmail}/accessInfo`), { value: 0 });
-                return true;
+                return false;
             }
         }
         
