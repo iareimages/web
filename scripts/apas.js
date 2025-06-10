@@ -39,7 +39,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/fireba
         document.getElementById("headerContainer").style.display = 'none';
         onAuthStateChanged(auth, async (user) => {
     if (user) {
-        const sanitizedEmail = sanitizeKey(user.email);
+        const sanitizedEmail = user.email.replace('.', '_'); 
         const userAccessRef = ref(db, 'Users/' + sanitizedEmail + '/access/1');
         relu = await checkAndSetInfo(user.email);
         if(relu){
@@ -150,7 +150,7 @@ async function checkAndSetInfo(email) {
             const showSelectedBtn = document.getElementById("showSelectedBtn");
 
             showSelectedBtn.addEventListener('click', async () => {
-const userAccessRef = ref(db, 'Users/' + sanitizeKey(userEmail) + '/access/1');
+const userAccessRef = ref(db, 'Users/' + userEmail.replace('.', '_') + '/access/1');
 const accessSnapshot = await get(userAccessRef);
 
 if (accessSnapshot.exists() && accessSnapshot.val() === 1) {
@@ -163,7 +163,7 @@ if (accessSnapshot.exists() && accessSnapshot.val() === 1) {
         return;
     }
     showSelectedValues();
-    const userRef = ref(db, 'Users/' + sanitizeKey(userEmail));
+    const userRef = ref(db, 'Users/' + userEmail.replace('.', '_'));
     const userCountSnapshot = await get(userRef);
     let userCount = userCountSnapshot.exists() ? Object.keys(userCountSnapshot.val()).length + 1 : 1; 
     const uniqueKey = userCount.toString();
@@ -254,7 +254,7 @@ if (accessSnapshot.exists() && accessSnapshot.val() === 1) {
 const user = auth.currentUser;  
 if (user) {
     const email = user.email;
-    const sanitizedEmail = sanitizeKey(email);  
+    const sanitizedEmail = email.replace(/\./g, '_');  
     const index = globalConfig.value;  
     if (!index) {
         console.error("Index is not available.");
