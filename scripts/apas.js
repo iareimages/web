@@ -141,7 +141,7 @@ async function checkAndSetInfo(email) {
                 return accessValue === 1;
             } else {
                 await set(ref(db, `Users/${sanitizedEmail}/accessInfo`), { value: 0 });
-                return true;
+                return false;
             }
         }
 
