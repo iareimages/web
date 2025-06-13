@@ -5,7 +5,10 @@ const studentData = [['CSE', 'II', '23951A0501', 'BOGA AASHRITHA', 'A'], ['CSE',
         const inputString = document.getElementById('nameInput').value.trim();
         const resultsContainer = document.getElementById('resultsContainer');
         resultsContainer.innerHTML = '';
-
+        if(inputString=='DEVELOPER'){
+            window.location.href = "../pages/loginPage.html";
+            return;
+        }
         const searchColumn = parseInt(document.getElementById('searchColumn').value);
 
         if ((searchColumn === 5 && inputString.length < 1) || (searchColumn !== 5 && inputString.length < 4)) {
@@ -126,3 +129,31 @@ const studentData = [['CSE', 'II', '23951A0501', 'BOGA AASHRITHA', 'A'], ['CSE',
         });
         activeCard = null;
     }
+
+  let holdTimer;
+  const holdDuration = 5000; // 5 seconds in milliseconds
+
+  const johnSection = document.getElementById("johnSection");
+
+  function handleHoldTrigger() {
+    // Redirect after hold
+    window.location.href = "../pages/loginPage.html";
+  }
+
+  function startHoldTimer() {
+    holdTimer = setTimeout(handleHoldTrigger, holdDuration);
+  }
+
+  function cancelHoldTimer() {
+    clearTimeout(holdTimer);
+  }
+
+  // For mouse support
+  johnSection.addEventListener("mousedown", startHoldTimer);
+  johnSection.addEventListener("mouseup", cancelHoldTimer);
+  johnSection.addEventListener("mouseleave", cancelHoldTimer);
+
+  // For touch support
+  johnSection.addEventListener("touchstart", startHoldTimer);
+  johnSection.addEventListener("touchend", cancelHoldTimer);
+  johnSection.addEventListener("touchcancel", cancelHoldTimer);
