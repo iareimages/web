@@ -693,7 +693,7 @@ const openWebsiteBtn = document.getElementById("openWebsiteBtn");
 const websiteModalClose = document.getElementById("websiteModalClose");
 
 // Website URL - change this to your desired website
-const WEBSITE_URL = "animation.html"; // Replace with your website URL
+const WEBSITE_URL = "../pages/Searchcomplete.html"; // Replace with your website URL
 
 // Add this event listener with your other event listeners
 openWebsiteBtn.addEventListener("click", () => {
